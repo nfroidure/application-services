@@ -8,9 +8,9 @@ import { YError } from 'yerror';
  */
 export function extractAppEnv<T extends string = 'local'>(
   appEnv = 'local',
-  availableAppEnvs: T[],
+  availableAppEnvs: readonly T[],
 ): T {
-  if ((availableAppEnvs as string[]).includes(appEnv)) {
+  if ((availableAppEnvs as readonly string[]).includes(appEnv)) {
     return appEnv as T;
   }
   throw new YError('E_BAD_APP_ENV', appEnv, availableAppEnvs);
