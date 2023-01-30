@@ -1,7 +1,10 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
 import initENV from './ENV.js';
-import { AppEnv, NodeEnv } from './ENV.js';
+import { NodeEnv } from './ENV.js';
+import type { BaseAppEnv } from './ENV.js';
 import type { LogService } from 'common-services';
+
+type TestAppEnv = BaseAppEnv | 'production';
 
 describe('initENV', () => {
   const log = jest.fn<LogService>();
@@ -30,9 +33,9 @@ ISOLATED_ENV=
       ),
     );
 
-    const ENV = await initENV<AppEnv>({
+    const ENV = await initENV({
       NODE_ENV: NodeEnv.Development,
-      APP_ENV: AppEnv.Local,
+      APP_ENV: 'local',
       BASE_ENV: { ISOLATED_ENV: '1' },
       PROCESS_ENV: { ISOLATED_ENV: '0' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
@@ -77,6 +80,14 @@ ISOLATED_ENV=
             "warning",
             "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.app.local".",
           ],
+          [
+            "warning",
+            "🔂 - Running with "development" node environment.",
+          ],
+          [
+            "warning",
+            "🔂 - Running with "local" application environment.",
+          ],
         ],
         "readFileCalls": [
           [
@@ -93,9 +104,9 @@ ISOLATED_ENV=
   it('should fail with non-existing file', async () => {
     readFile.mockRejectedValueOnce(new Error('EEXISTS'));
 
-    const ENV = await initENV({
+    const ENV = await initENV<TestAppEnv>({
       NODE_ENV: NodeEnv.Development,
-      APP_ENV: AppEnv.Local,
+      APP_ENV: 'production',
       BASE_ENV: { ISOLATED_ENV: '0' },
       PROCESS_ENV: { ISOLATED_ENV: '1' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
@@ -127,7 +138,7 @@ ISOLATED_ENV=
           ],
           [
             "debug",
-            "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.app.local".",
+            "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.app.production".",
           ],
           [
             "debug",
@@ -135,7 +146,15 @@ ISOLATED_ENV=
           ],
           [
             "debug",
-            "🚫 - No file found at "/home/whoami/my-whook-project/.env.app.local".",
+            "🚫 - No file found at "/home/whoami/my-whook-project/.env.app.production".",
+          ],
+          [
+            "warning",
+            "🔂 - Running with "development" node environment.",
+          ],
+          [
+            "warning",
+            "🔂 - Running with "production" application environment.",
           ],
         ],
         "readFileCalls": [
@@ -143,7 +162,7 @@ ISOLATED_ENV=
             "/home/whoami/my-whook-project/.env.node.development",
           ],
           [
-            "/home/whoami/my-whook-project/.env.app.local",
+            "/home/whoami/my-whook-project/.env.app.production",
           ],
         ],
       }

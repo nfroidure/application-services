@@ -1,6 +1,7 @@
 import { packageDirectory } from 'pkg-dir';
 import { name, autoService } from 'knifecycle';
 import { YError } from 'yerror';
+import { noop } from '../libs/utils.js';
 import type { LogService } from 'common-services';
 
 /* Architecture Note #1.2: `PROJECT_DIR`
@@ -8,7 +9,17 @@ import type { LogService } from 'common-services';
 A service to determine the directory of the NodeJS project
  currently running.
 */
-async function initProjectDirectory({ log }: { log: LogService }) {
+
+/**
+ * Initialize the PROJECT_DIR service
+ * @param  {Object}   services
+ * The services PROJECT_DIR depends on
+ * @param  {Object}   [services.log=noop]
+ * An optional logging service
+ * @return {Promise<Object>}
+ * A promise of a an object the actual configuration properties.
+ */
+async function initProjectDirectory({ log = noop }: { log: LogService }) {
   const theProjectDirectory = await packageDirectory();
 
   if (theProjectDirectory) {

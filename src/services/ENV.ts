@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { autoService, name, singleton } from 'knifecycle';
 import { noop } from '../libs/utils.js';
-import { printStackTrace } from 'yerror';
+import { YError, printStackTrace } from 'yerror';
 import type { LogService } from 'common-services';
 import type { AppEnvVars } from '../index.js';
 
@@ -12,15 +12,13 @@ export enum NodeEnv {
   Development = 'development',
   Production = 'production',
 }
-export enum AppEnv {
-  Local = 'local',
-  Production = 'production',
-}
+export type BaseAppEnv = 'local';
 export type BaseAppEnvVars = {
   ISOLATED_ENV?: string;
 };
 
 const DEFAULT_BASE_ENV: AppEnvVars = {};
+const NODE_ENVS = Object.values(NodeEnv);
 
 /* Architecture Note #1.3: `ENV`
 
@@ -33,7 +31,7 @@ export default singleton(name('ENV', autoService(initENV))) as typeof initENV;
 export type ENVConfig = {
   BASE_ENV?: AppEnvVars;
 };
-export type ENVDependencies<T extends AppEnv = AppEnv> = ENVConfig & {
+export type ENVDependencies<T extends string = BaseAppEnv> = ENVConfig & {
   NODE_ENV: NodeEnv;
   APP_ENV: T;
   PROJECT_DIR: string;
@@ -57,7 +55,7 @@ export type ENVDependencies<T extends AppEnv = AppEnv> = ENVConfig & {
  * @return {Promise<Object>}
  * A promise of an object containing the actual env vars.
  */
-async function initENV<T extends AppEnv = AppEnv>({
+async function initENV<T extends string = 'local'>({
   NODE_ENV,
   APP_ENV,
   PROJECT_DIR,
@@ -70,6 +68,11 @@ async function initENV<T extends AppEnv = AppEnv>({
 
   log('debug', `♻️ - Loading the environment service.`);
 
+  if (!NODE_ENVS.includes(NODE_ENV)) {
+    log('error', `❌ - Non-standard NODE_ENV value detected: "${NODE_ENV}".`);
+    throw new YError('E_BAD_NODE_ENV', NODE_ENV, NODE_ENVS);
+  }
+
   /* Architecture Note #1.1.1: Environment isolation
   Per default, we take the process environment as is
    but since it could lead to leaks when building
@@ -78,7 +81,7 @@ async function initENV<T extends AppEnv = AppEnv>({
   */
   if (!PROCESS_ENV.ISOLATED_ENV) {
     ENV = { ...ENV, ...PROCESS_ENV };
-    log('warning', `🖥 - Using the process env.`);
+    log('debug', `🖥 - Using the process env.`);
   } else {
     log('warning', `🖥 - Using an isolated env.`);
   }
@@ -103,6 +106,9 @@ async function initENV<T extends AppEnv = AppEnv>({
       _readEnvFile({ PROJECT_DIR, readFile, log }, appEnvFile),
     ])
   ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), ENV);
+
+  log('warning', `🔂 - Running with "${NODE_ENV}" node environment.`);
+  log('warning', `🔂 - Running with "${APP_ENV}" application environment.`);
 
   return ENV;
 }

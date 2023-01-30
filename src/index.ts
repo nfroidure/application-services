@@ -24,8 +24,6 @@ import type {
 import { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
-  // Overriding with your deployments environments
-  export type AppEnv = BaseAppEnv | 'staging' | 'uat' | 'production';
   export interface AppEnvVars extends BaseAppEnvVars {
     DRY_RUN: string;
   }
@@ -43,22 +41,23 @@ declare module 'application-services' {
 
 import initProcessEnvService from './services/PROCESS_ENV.js';
 import initProjectDirService from './services/PROJECT_DIR.js';
-import initEnvService, { NodeEnv, AppEnv } from './services/ENV.js';
+import initEnvService, { NodeEnv } from './services/ENV.js';
 import initConfigService from './services/APP_CONFIG.js';
+import { extractAppEnv } from './libs/env.js';
 
-import type { BaseAppEnvVars } from './services/ENV.js';
+import type { BaseAppEnv, BaseAppEnvVars } from './services/ENV.js';
 import type { BaseAppConfig } from './services/APP_CONFIG.js';
 
 export {
   NodeEnv,
-  AppEnv,
   initProcessEnvService,
   initProjectDirService,
   initEnvService,
   initConfigService,
+  extractAppEnv,
 };
 
-export type { BaseAppConfig, BaseAppEnvVars };
+export type { BaseAppEnv, BaseAppEnvVars, BaseAppConfig };
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AppEnvVars extends BaseAppEnvVars {}

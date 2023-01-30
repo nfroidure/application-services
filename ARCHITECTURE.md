@@ -43,8 +43,6 @@ import type {
 import { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
-  // Overriding with your deployments environments
-  export type AppEnv = BaseAppEnv | 'staging' | 'uat' | 'production';
   export interface AppEnvVars extends BaseAppEnvVars {
     DRY_RUN: string;
   }
@@ -59,7 +57,7 @@ declare module 'application-services' {
 " > app.d.ts
 ```
 
-[See in context](./src/index.ts#L1-L42)
+[See in context](./src/index.ts#L1-L40)
 
 
 
@@ -79,7 +77,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L73-L78)
+[See in context](./src/services/ENV.ts#L76-L81)
 
 
 
@@ -89,7 +87,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L86-L91)
+[See in context](./src/services/ENV.ts#L89-L94)
 
 
 
@@ -98,7 +96,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L94-L97)
+[See in context](./src/services/ENV.ts#L97-L100)
 
 
 
@@ -107,7 +105,7 @@ You may need to keep some secrets out of your Git
 A service to determine the directory of the NodeJS project
  currently running.
 
-[See in context](./src/services/PROJECT_DIR.ts#L6-L10)
+[See in context](./src/services/PROJECT_DIR.ts#L7-L11)
 
 
 
@@ -116,7 +114,7 @@ A service to determine the directory of the NodeJS project
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 
-[See in context](./src/services/ENV.ts#L25-L29)
+[See in context](./src/services/ENV.ts#L23-L27)
 
 
 

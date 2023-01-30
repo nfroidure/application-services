@@ -5,4 +5,13 @@ import { constant } from 'knifecycle';
 A simple constant service to enclose the NodeJS `process.env`
  global variable.
 */
-export default constant('PROCESS_ENV', process.env);
+
+/**
+ * @constant
+ * @type Object
+ * @name PROCESS_ENV
+ * Provides the PROCESS_ENV service
+ */
+const PROCESS_ENV = process.env;
+
+export default constant('PROCESS_ENV', PROCESS_ENV);

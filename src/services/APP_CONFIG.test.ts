@@ -1,7 +1,7 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
 import initCONFIGS from './APP_CONFIG.js';
 import { YError } from 'yerror';
-import { AppEnv } from './ENV.js';
+import { BaseAppEnv } from './ENV.js';
 import type { ImporterService, LogService } from 'common-services';
 
 type TestAppConfig = {
@@ -28,8 +28,8 @@ describe('initCONFIGS', () => {
       },
     });
 
-    const CONFIGS = await initCONFIGS<TestAppConfig, AppEnv>({
-      APP_ENV: AppEnv.Local,
+    const CONFIGS = await initCONFIGS<TestAppConfig, BaseAppEnv>({
+      APP_ENV: 'local',
       PROJECT_SRC: '/home/whoami/my-whook-project/src',
       log,
       importer,
@@ -71,8 +71,8 @@ describe('initCONFIGS', () => {
     });
 
     try {
-      await initCONFIGS<TestAppConfig, AppEnv>({
-        APP_ENV: AppEnv.Production,
+      await initCONFIGS<TestAppConfig, BaseAppEnv>({
+        APP_ENV: 'local',
         PROJECT_SRC: '/home/whoami/my-whook-project/src',
         log,
         importer,
@@ -88,11 +88,11 @@ describe('initCONFIGS', () => {
         {
           "errorCode": "E_NO_CONFIG",
           "errorParams": [
-            "/home/whoami/my-whook-project/src/config/production/config.js",
+            "/home/whoami/my-whook-project/src/config/local/config.js",
           ],
           "importerCalls": [
             [
-              "/home/whoami/my-whook-project/src/config/production/config.js",
+              "/home/whoami/my-whook-project/src/config/local/config.js",
             ],
           ],
           "logCalls": [
@@ -102,11 +102,11 @@ describe('initCONFIGS', () => {
             ],
             [
               "warning",
-              "⚡ - Loading configurations from "/home/whoami/my-whook-project/src/config/production/config.js".",
+              "⚡ - Loading configurations from "/home/whoami/my-whook-project/src/config/local/config.js".",
             ],
             [
               "warning",
-              "☢ - Could not load configuration file "/home/whoami/my-whook-project/src/config/production/config.js".",
+              "☢ - Could not load configuration file "/home/whoami/my-whook-project/src/config/local/config.js".",
             ],
           ],
         }

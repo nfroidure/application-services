@@ -3,7 +3,7 @@ import { noop } from '../libs/utils.js';
 import path from 'path';
 import { printStackTrace, YError } from 'yerror';
 import type { ImporterService, LogService } from 'common-services';
-import type { AppEnv } from './ENV.js';
+import type { BaseAppEnv } from './ENV.js';
 
 /* Architecture Note #1.4: `APP_CONFIG`
 
@@ -13,7 +13,7 @@ The `APP_CONFIG` service allows to manage a typed application
 */
 
 export type BaseAppConfig = Record<string, unknown>;
-export type AppConfigDependencies<T, U extends string = AppEnv> = {
+export type AppConfigDependencies<T, U extends string = BaseAppEnv> = {
   APP_ENV: U;
   PROJECT_SRC: string;
   importer: ImporterService<{ default: T }>;
@@ -40,7 +40,7 @@ export default name(
  * @return {Promise<Object>}
  * A promise of a an object the actual configuration properties.
  */
-async function initAppConfig<T, U extends string = AppEnv>({
+async function initAppConfig<T, U extends string = BaseAppEnv>({
   APP_ENV,
   PROJECT_SRC,
   importer,
