@@ -1,6 +1,6 @@
 {
   "name": "application-services",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Out of the box application environment and configuration service.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
