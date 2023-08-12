@@ -1,15 +1,4 @@
 {
-  "name": "application-services",
-  "version": "1.0.1",
-  "description": "Out of the box application environment and configuration service.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "keywords": [
-    "env",
-    "config",
-    "knifecycle"
-  ],
   "metapak": {
     "data": {
       "files": "'src/**/*.ts'",
@@ -34,9 +23,20 @@
       "codeclimate"
     ]
   },
+  "name": "application-services",
+  "version": "1.0.1",
+  "description": "Out of the box application environment and configuration service.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "keywords": [
+    "env",
+    "config",
+    "knifecycle"
+  ],
   "scripts": {
     "architecture": "jsarch 'src/**/*.ts' > ARCHITECTURE.md && git add ARCHITECTURE.md",
-    "build": "rimraf -f 'dist' && tsc --outDir dist",
+    "build": "rimraf 'dist' && tsc --outDir dist",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
     "cover": "npm run jest -- --coverage",
@@ -49,7 +49,9 @@
     "precz": "npm run build && npm run doc && npm run architecture && npm t && npm run lint && npm run metapak -- -s",
     "prettier": "prettier --write 'src/**/*.ts'",
     "preversion": "npm run build && npm run doc && npm run architecture && npm t && npm run lint && npm run metapak -- -s",
+    "rebuild": "swc ./src -s -d dist -C jsc.target=es2022",
     "test": "npm run jest",
+    "type-check": "tsc --pretty --noEmit",
     "version": "npm run changelog && git add CHANGELOG.md"
   },
   "repository": {
@@ -67,35 +69,37 @@
   },
   "homepage": "https://github.com/nfroidure/application-services#readme",
   "dependencies": {
-    "common-services": "^12.1.0",
-    "dotenv": "^16.0.3",
-    "knifecycle": "^14.1.0",
+    "common-services": "^13.0.0",
+    "dotenv": "^16.3.1",
+    "knifecycle": "^15.0.1",
     "pkg-dir": "^7.0.0",
-    "yerror": "^6.2.1"
+    "yerror": "^7.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.36.0",
-    "@typescript-eslint/parser": "^5.36.0",
-    "commitizen": "^4.2.5",
-    "conventional-changelog-cli": "^2.2.2",
+    "@swc/cli": "^0.1.62",
+    "@swc/core": "^1.3.76",
+    "@swc/helpers": "^0.5.1",
+    "@swc/jest": "^0.2.28",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
+    "commitizen": "^4.3.0",
+    "conventional-changelog-cli": "^3.0.0",
     "coveralls": "^3.1.1",
     "cz-conventional-changelog": "^3.3.0",
-    "esbuild": "^0.15.6",
-    "esbuild-jest": "^0.5.0",
-    "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "jest": "^29.0.1",
-    "jsarch": "^6.0.0",
-    "jsdoc-to-markdown": "^7.1.1",
-    "metapak": "^4.0.6",
-    "metapak-nfroidure": "13.0.0",
-    "prettier": "^2.7.1",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.8.2"
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.6.2",
+    "jsarch": "^6.0.1",
+    "jsdoc-to-markdown": "^8.0.0",
+    "metapak": "^5.1.3",
+    "metapak-nfroidure": "15.0.0",
+    "prettier": "^3.0.1",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.1.6"
   },
   "engines": {
-    "node": ">=16.15.0"
+    "node": ">=18.16.0"
   },
   "config": {
     "commitizen": {
@@ -116,15 +120,19 @@
       "cz-conventional-changelog",
       "conventional-changelog-cli",
       "eslint",
+      "prettier",
       "eslint-config-prettier",
       "eslint-plugin-prettier",
-      "prettier",
       "@typescript-eslint/eslint-plugin",
       "@typescript-eslint/parser",
       "typescript",
       "rimraf",
+      "@swc/cli",
+      "@swc/core",
+      "@swc/helpers",
       "jest",
       "coveralls",
+      "@swc/jest",
       "jsdoc-to-markdown",
       "jsarch"
     ]
@@ -177,11 +185,8 @@
     ],
     "transform": {
       "^.+\\.tsx?$": [
-        "esbuild-jest",
-        {
-          "sourcemap": true,
-          "format": "esm"
-        }
+        "@swc/jest",
+        {}
       ]
     },
     "testEnvironment": "node",
@@ -190,7 +195,8 @@
     },
     "extensionsToTreatAsEsm": [
       ".ts"
-    ]
+    ],
+    "prettierPath": null
   },
   "jsarch": {
     "parserOptions": {

@@ -146,7 +146,7 @@ async function _readEnvFile(
     return FILE_ENV;
   } catch (err) {
     log('debug', `🚫 - No file found at "${fullFilePath}".`);
-    log('debug-stack', printStackTrace(err));
+    log('debug-stack', printStackTrace(err as Error));
     return {};
   }
 }
