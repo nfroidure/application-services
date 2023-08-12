@@ -1,18 +1,12 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
 import initCONFIGS from './APP_CONFIG.js';
 import { YError } from 'yerror';
-import { BaseAppEnv } from './ENV.js';
+import type { AppConfig } from './APP_CONFIG.js';
 import type { ImporterService, LogService } from 'common-services';
-
-type TestAppConfig = {
-  CONFIG: {
-    testConfig: string;
-  };
-};
 
 describe('initCONFIGS', () => {
   const log = jest.fn<LogService>();
-  const importer = jest.fn<ImporterService<{ default: TestAppConfig }>>();
+  const importer = jest.fn<ImporterService<{ default: AppConfig }>>();
 
   beforeEach(() => {
     log.mockReset();
@@ -28,7 +22,7 @@ describe('initCONFIGS', () => {
       },
     });
 
-    const CONFIGS = await initCONFIGS<TestAppConfig, BaseAppEnv>({
+    const CONFIGS = await initCONFIGS({
       APP_ENV: 'local',
       PROJECT_SRC: '/home/whoami/my-whook-project/src',
       log,
@@ -71,7 +65,7 @@ describe('initCONFIGS', () => {
     });
 
     try {
-      await initCONFIGS<TestAppConfig, BaseAppEnv>({
+      await initCONFIGS({
         APP_ENV: 'local',
         PROJECT_SRC: '/home/whoami/my-whook-project/src',
         log,

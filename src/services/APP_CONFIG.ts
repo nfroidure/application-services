@@ -2,8 +2,7 @@ import { autoService, singleton, name } from 'knifecycle';
 import { noop } from '../libs/utils.js';
 import path from 'path';
 import { printStackTrace, YError } from 'yerror';
-import type { ImporterService, LogService } from 'common-services';
-import type { BaseAppEnv } from './ENV.js';
+import type { BaseAppEnv, ImporterService, LogService } from 'common-services';
 
 /* Architecture Note #1.4: `APP_CONFIG`
 
@@ -13,10 +12,12 @@ The `APP_CONFIG` service allows to manage a typed application
 */
 
 export type BaseAppConfig = Record<string, unknown>;
-export type AppConfigDependencies<T, U extends string = BaseAppEnv> = {
-  APP_ENV: U;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppConfig extends BaseAppConfig {}
+export type AppConfigDependencies<T extends BaseAppEnv> = {
+  APP_ENV: T;
   PROJECT_SRC: string;
-  importer: ImporterService<{ default: T }>;
+  importer: ImporterService<{ default: AppConfig }>;
   log?: LogService;
 };
 
@@ -40,12 +41,12 @@ export default name(
  * @return {Promise<Object>}
  * A promise of a an object the actual configuration properties.
  */
-async function initAppConfig<T, U extends string = BaseAppEnv>({
+async function initAppConfig<T extends BaseAppEnv>({
   APP_ENV,
   PROJECT_SRC,
   importer,
   log = noop,
-}: AppConfigDependencies<T, U>): Promise<T> {
+}: AppConfigDependencies<T>): Promise<AppConfig> {
   log('debug', `🏭 - Initializing the APP_CONFIG service.`);
 
   const configPath = path.join(PROJECT_SRC, 'config', APP_ENV, 'config.js');

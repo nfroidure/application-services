@@ -41,25 +41,22 @@ declare module 'application-services' {
 
 import initProcessEnvService from './services/PROCESS_ENV.js';
 import initProjectDirService from './services/PROJECT_DIR.js';
-import initEnvService, { NodeEnv } from './services/ENV.js';
-import initConfigService from './services/APP_CONFIG.js';
+import initEnvService from './services/ENV.js';
+import initAppConfigService from './services/APP_CONFIG.js';
 import { extractAppEnv } from './libs/env.js';
 
-import type { BaseAppEnv, BaseAppEnvVars } from './services/ENV.js';
-import type { BaseAppConfig } from './services/APP_CONFIG.js';
+export type {
+  BaseAppEnvVars,
+  AppEnvVars,
+  ENVConfig,
+  ENVDependencies,
+} from './services/ENV.js';
+export type { BaseAppConfig, AppConfig } from './services/APP_CONFIG.js';
 
 export {
-  NodeEnv,
   initProcessEnvService,
   initProjectDirService,
   initEnvService,
-  initConfigService,
+  initAppConfigService,
   extractAppEnv,
 };
-
-export type { BaseAppEnv, BaseAppEnvVars, BaseAppConfig };
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppEnvVars extends BaseAppEnvVars {}
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppConfig extends BaseAppConfig {}

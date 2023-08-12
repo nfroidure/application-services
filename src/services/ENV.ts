@@ -3,19 +3,16 @@ import fs from 'fs';
 import path from 'path';
 import { autoService, name, singleton } from 'knifecycle';
 import { noop } from '../libs/utils.js';
+import { NodeEnv } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
-import type { LogService } from 'common-services';
-import type { AppEnvVars } from '../index.js';
+import type { BaseAppEnv, LogService } from 'common-services';
 
-export enum NodeEnv {
-  Test = 'test',
-  Development = 'development',
-  Production = 'production',
-}
-export type BaseAppEnv = 'local';
 export type BaseAppEnvVars = {
+  NODE_ENV?: string;
   ISOLATED_ENV?: string;
 };
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AppEnvVars extends BaseAppEnvVars {}
 
 const DEFAULT_BASE_ENV: AppEnvVars = {};
 const NODE_ENVS = Object.values(NodeEnv);
@@ -31,7 +28,7 @@ export default singleton(name('ENV', autoService(initENV))) as typeof initENV;
 export type ENVConfig = {
   BASE_ENV?: AppEnvVars;
 };
-export type ENVDependencies<T extends string = BaseAppEnv> = ENVConfig & {
+export type ENVDependencies<T extends BaseAppEnv> = ENVConfig & {
   NODE_ENV: NodeEnv;
   APP_ENV: T;
   PROJECT_DIR: string;
@@ -55,7 +52,7 @@ export type ENVDependencies<T extends string = BaseAppEnv> = ENVConfig & {
  * @return {Promise<Object>}
  * A promise of an object containing the actual env vars.
  */
-async function initENV<T extends string = 'local'>({
+async function initENV<T extends BaseAppEnv>({
   NODE_ENV,
   APP_ENV,
   PROJECT_DIR,
@@ -125,12 +122,12 @@ async function _readFile(path: string): Promise<Buffer> {
   });
 }
 
-async function _readEnvFile(
+async function _readEnvFile<T extends BaseAppEnv>(
   {
     PROJECT_DIR,
     readFile,
     log,
-  }: Required<Pick<ENVDependencies, 'PROJECT_DIR' | 'readFile' | 'log'>>,
+  }: Required<Pick<ENVDependencies<T>, 'PROJECT_DIR' | 'readFile' | 'log'>>,
   filePath: string,
 ): Promise<AppEnvVars> {
   const fullFilePath = path.join(PROJECT_DIR, filePath);
