@@ -97,12 +97,21 @@ async function initENV<T extends BaseAppEnv>({
   */
   const appEnvFile = `.env.app.${APP_ENV}`;
 
+  /* Architecture Note #1.1.a: evaluation order
+  The final environment is composed from the differents sources
+   in this order:
+  - the `.env.node.${NODE_ENV}` file content if exists
+  - the `.env.app.${APP_ENV}` file content if exists
+  - the process ENV (so that one can override values by
+     adding environment variables).
+  */
   ENV = (
     await Promise.all([
       _readEnvFile({ PROJECT_DIR, readFile, log }, nodeEnvFile),
       _readEnvFile({ PROJECT_DIR, readFile, log }, appEnvFile),
+      ENV,
     ])
-  ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), ENV);
+  ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), {});
 
   log('warning', `🔂 - Running with "${NODE_ENV}" node environment.`);
   log('warning', `🔂 - Running with "${APP_ENV}" application environment.`);
