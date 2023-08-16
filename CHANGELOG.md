@@ -1,3 +1,12 @@
+# [3.0.0](https://github.com/nfroidure/application-services/compare/v2.0.0...v3.0.0) (2023-08-16)
+
+
+### Bug Fixes
+
+* **core:** env evaluation order ([cd046ac](https://github.com/nfroidure/application-services/commit/cd046ac97433a7a672f319401d5c361021d9d913))
+
+
+
 # [2.0.0](https://github.com/nfroidure/application-services/compare/v1.0.1...v2.0.0) (2023-08-12)
 
 
