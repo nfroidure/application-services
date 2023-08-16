@@ -1,5 +1,5 @@
 import { packageDirectory } from 'pkg-dir';
-import { name, autoService } from 'knifecycle';
+import { name, autoService, singleton } from 'knifecycle';
 import { YError } from 'yerror';
 import { noop } from '../libs/utils.js';
 import type { LogService } from 'common-services';
@@ -34,4 +34,6 @@ async function initProjectDirectory({ log = noop }: { log: LogService }) {
   throw new YError('E_NO_PROJECT_DIR');
 }
 
-export default name('PROJECT_DIR', autoService(initProjectDirectory));
+export default singleton(
+  name('PROJECT_DIR', autoService(initProjectDirectory)),
+);

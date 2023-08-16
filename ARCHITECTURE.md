@@ -77,7 +77,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L76-L81)
+[See in context](./src/services/ENV.ts#L73-L78)
 
 
 
@@ -87,7 +87,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L89-L94)
+[See in context](./src/services/ENV.ts#L86-L91)
 
 
 
@@ -96,7 +96,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L97-L100)
+[See in context](./src/services/ENV.ts#L94-L97)
 
 
 
@@ -114,7 +114,7 @@ A service to determine the directory of the NodeJS project
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 
-[See in context](./src/services/ENV.ts#L23-L27)
+[See in context](./src/services/ENV.ts#L20-L24)
 
 
 
@@ -124,5 +124,5 @@ The `APP_CONFIG` service allows to manage a typed application
  configuration by selectively loading the configuration file
  according to the `APP_ENV` environment variable.
 
-[See in context](./src/services/APP_CONFIG.ts#L8-L13)
+[See in context](./src/services/APP_CONFIG.ts#L7-L12)
 
