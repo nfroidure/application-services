@@ -1,3 +1,7 @@
+## [3.0.1](https://github.com/nfroidure/application-services/compare/v3.0.0...v3.0.1) (2023-08-17)
+
+
+
 # [3.0.0](https://github.com/nfroidure/application-services/compare/v2.0.0...v3.0.0) (2023-08-16)
 
 
