@@ -12,8 +12,7 @@ The `APP_CONFIG` service allows to manage a typed application
 */
 
 export type BaseAppConfig = Record<string, unknown>;
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AppConfig extends BaseAppConfig {}
+export interface AppConfig {}
 export type AppConfigDependencies<T extends BaseAppEnv> = {
   APP_ENV: T;
   PROJECT_SRC: string;
