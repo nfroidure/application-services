@@ -3,6 +3,7 @@ import initAppConfig from './APP_CONFIG.js';
 import { YError } from 'yerror';
 import type { AppConfig } from './APP_CONFIG.js';
 import type { ImporterService, LogService } from 'common-services';
+import { NodeEnv } from './ENV.js';
 
 describe('initAppConfig', () => {
   const log = jest.fn<LogService>();
@@ -17,7 +18,7 @@ describe('initAppConfig', () => {
     importer.mockResolvedValueOnce({
       default: {
         BASE_ENV: {
-          NODE_ENV: 'test',
+          NODE_ENV: NodeEnv.Test,
         },
       },
     });

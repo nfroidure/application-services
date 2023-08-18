@@ -15,15 +15,20 @@
    2. [`PROJECT_DIR`](#12-`project_dir`)
    3. [`ENV`](#13-`env`)
    4. [`APP_CONFIG`](#14-`app_config`)
+   5. [Process](#15-process)
+      1. [Process name](#151-process-name)
+      2. [Signals handling](#152-signals-handling)
+      3. [Handling services fatal errors](#153-handling-services-fatal-errors)
+      4. [Uncaught exceptions](#154-uncaught-exceptions)
 
 
 ## 1. Application services
 
 This module manage application environments and configurations
  out of the box thanks to two separated environment variables:
- the classic `NODE_ENV` and the `APP_ENV`.
+ the classic `ENV.NODE_ENV` and the `APP_ENV`.
 
-The `NODE_ENV` variable is intended to simply tell all
+The `ENV.NODE_ENV` variable is intended to simply tell all
  tooling ecosystem in which context the code is run.
 
 The `APP_ENV` is instead aimed to tell in which deployment
@@ -78,7 +83,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L74-L79)
+[See in context](./src/services/ENV.ts#L75-L80)
 
 
 
@@ -88,7 +93,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L87-L92)
+[See in context](./src/services/ENV.ts#L104-L109)
 
 
 
@@ -97,7 +102,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L95-L98)
+[See in context](./src/services/ENV.ts#L112-L115)
 
 
 
@@ -115,7 +120,7 @@ A service to determine the directory of the NodeJS project
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 
-[See in context](./src/services/ENV.ts#L20-L24)
+[See in context](./src/services/ENV.ts#L26-L30)
 
 
 
@@ -126,4 +131,53 @@ The `APP_CONFIG` service allows to manage a typed application
  according to the `APP_ENV` environment variable.
 
 [See in context](./src/services/APP_CONFIG.ts#L8-L13)
+
+
+
+### 1.5. Process
+
+The `process` service takes care of the process status.
+
+It returns nothing and should be injected only for its
+ side effects.
+
+[See in context](./src/services/process.ts#L30-L35)
+
+
+
+#### 1.5.1. Process name
+
+It also set the process name with the actual NODE_ENV.
+
+[See in context](./src/services/process.ts#L77-L80)
+
+
+
+#### 1.5.2. Signals handling
+
+It also handle SIGINT and SIGTERM signals to allow to
+ gracefully shutdown the running process. The signals
+ to handle can be customized by injecting the `SIGNALS`
+ optional dependencies.
+
+[See in context](./src/services/process.ts#L85-L91)
+
+
+
+#### 1.5.3. Handling services fatal errors
+
+If an error occurs it attempts to gracefully exit
+to give it a chance to finish properly.
+
+[See in context](./src/services/process.ts#L96-L100)
+
+
+
+#### 1.5.4. Uncaught exceptions
+
+If an uncaught exception occurs it also attempts to
+ gracefully exit since a process should never be kept
+ alive when an uncaught exception is raised.
+
+[See in context](./src/services/process.ts#L107-L112)
 

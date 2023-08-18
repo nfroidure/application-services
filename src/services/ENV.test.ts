@@ -1,6 +1,5 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
-import initENV from './ENV.js';
-import { NodeEnv } from 'common-services';
+import initENV, { NodeEnv } from './ENV.js';
 import type { AppEnvVars } from './ENV.js';
 import type { LogService } from 'common-services';
 
@@ -32,9 +31,8 @@ ISOLATED_ENV=
     );
 
     const ENV = await initENV({
-      NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      APP_CONFIG: { BASE_ENV: { ISOLATED_ENV: '1' } },
+      BASE_ENV: { ISOLATED_ENV: '1', NODE_ENV: NodeEnv.Production },
       PROCESS_ENV: { ISOLATED_ENV: '0' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
@@ -52,6 +50,7 @@ ISOLATED_ENV=
     "DB_PASSWORD": "oudelali",
     "DEV_MODE": "1",
     "ISOLATED_ENV": "1",
+    "NODE_ENV": "production",
   },
   "logCalls": [
     [
@@ -64,7 +63,7 @@ ISOLATED_ENV=
     ],
     [
       "debug",
-      "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.node.development".",
+      "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.node.production".",
     ],
     [
       "debug",
@@ -72,7 +71,7 @@ ISOLATED_ENV=
     ],
     [
       "warning",
-      "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.node.development".",
+      "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.node.production".",
     ],
     [
       "warning",
@@ -80,7 +79,7 @@ ISOLATED_ENV=
     ],
     [
       "warning",
-      "🔂 - Running with "development" node environment.",
+      "🔂 - Running with "production" node environment.",
     ],
     [
       "warning",
@@ -89,7 +88,7 @@ ISOLATED_ENV=
   ],
   "readFileCalls": [
     [
-      "/home/whoami/my-whook-project/.env.node.development",
+      "/home/whoami/my-whook-project/.env.node.production",
     ],
     [
       "/home/whoami/my-whook-project/.env.app.local",
@@ -119,15 +118,15 @@ A_APP_ENV_VAR=keep_that_value
     );
 
     const ENV = await initENV({
-      NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      APP_CONFIG: {
-        BASE_ENV: {
-          A_PROCESS_ENV_VAR: 'do_not_keep_that_value',
-          A_BASE_ENV_VAR: 'keep_that_value',
-        } as AppEnvVars,
-      },
-      PROCESS_ENV: { A_PROCESS_ENV_VAR: 'keep_that_value' } as AppEnvVars,
+      BASE_ENV: {
+        A_PROCESS_ENV_VAR: 'do_not_keep_that_value',
+        A_BASE_ENV_VAR: 'keep_that_value',
+      } as Partial<AppEnvVars>,
+      PROCESS_ENV: {
+        A_PROCESS_ENV_VAR: 'keep_that_value',
+        NODE_ENV: NodeEnv.Production,
+      } as AppEnvVars,
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
       readFile,
@@ -144,6 +143,7 @@ A_APP_ENV_VAR=keep_that_value
     "A_BASE_ENV_VAR": "keep_that_value",
     "A_NODE_ENV_VAR": "keep_that_value",
     "A_PROCESS_ENV_VAR": "keep_that_value",
+    "NODE_ENV": "production",
   },
   "logCalls": [
     [
@@ -156,7 +156,7 @@ A_APP_ENV_VAR=keep_that_value
     ],
     [
       "debug",
-      "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.node.development".",
+      "💾 - Trying to load .env file at "/home/whoami/my-whook-project/.env.node.production".",
     ],
     [
       "debug",
@@ -164,7 +164,7 @@ A_APP_ENV_VAR=keep_that_value
     ],
     [
       "warning",
-      "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.node.development".",
+      "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.node.production".",
     ],
     [
       "warning",
@@ -172,7 +172,7 @@ A_APP_ENV_VAR=keep_that_value
     ],
     [
       "warning",
-      "🔂 - Running with "development" node environment.",
+      "🔂 - Running with "production" node environment.",
     ],
     [
       "warning",
@@ -181,7 +181,7 @@ A_APP_ENV_VAR=keep_that_value
   ],
   "readFileCalls": [
     [
-      "/home/whoami/my-whook-project/.env.node.development",
+      "/home/whoami/my-whook-project/.env.node.production",
     ],
     [
       "/home/whoami/my-whook-project/.env.app.local",
@@ -195,9 +195,8 @@ A_APP_ENV_VAR=keep_that_value
     readFile.mockRejectedValueOnce(new Error('EEXISTS'));
 
     const ENV = await initENV({
-      NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      APP_CONFIG: { BASE_ENV: { ISOLATED_ENV: '0' } },
+      BASE_ENV: { ISOLATED_ENV: '0' },
       PROCESS_ENV: { ISOLATED_ENV: '1' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
@@ -212,6 +211,7 @@ A_APP_ENV_VAR=keep_that_value
 {
   "ENV": {
     "ISOLATED_ENV": "0",
+    "NODE_ENV": "development",
   },
   "logCalls": [
     [
@@ -221,6 +221,10 @@ A_APP_ENV_VAR=keep_that_value
     [
       "warning",
       "🖥 - Using an isolated env.",
+    ],
+    [
+      "warning",
+      "⚠ - NODE_ENV environment variable is not set, setting it to "developement".",
     ],
     [
       "debug",

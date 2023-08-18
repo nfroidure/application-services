@@ -10,6 +10,11 @@ A service to determine the directory of the NodeJS project
  currently running.
 */
 
+export type ProjectDirService = string;
+export type ProjectDirDependencies = {
+  log: LogService;
+};
+
 /**
  * Initialize the PROJECT_DIR service
  * @param  {Object}   services
@@ -19,7 +24,9 @@ A service to determine the directory of the NodeJS project
  * @return {Promise<Object>}
  * A promise of a an object the actual configuration properties.
  */
-async function initProjectDirectory({ log = noop }: { log: LogService }) {
+async function initProjectDirectory({
+  log = noop,
+}: ProjectDirDependencies): Promise<ProjectDirService> {
   const theProjectDirectory = await packageDirectory();
 
   if (theProjectDirectory) {
