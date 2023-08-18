@@ -34,7 +34,7 @@ ISOLATED_ENV=
     const ENV = await initENV({
       NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      BASE_ENV: { ISOLATED_ENV: '1' },
+      APP_CONFIG: { BASE_ENV: { ISOLATED_ENV: '1' } },
       PROCESS_ENV: { ISOLATED_ENV: '0' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
@@ -121,10 +121,12 @@ A_APP_ENV_VAR=keep_that_value
     const ENV = await initENV({
       NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      BASE_ENV: {
-        A_PROCESS_ENV_VAR: 'do_not_keep_that_value',
-        A_BASE_ENV_VAR: 'keep_that_value',
-      } as AppEnvVars,
+      APP_CONFIG: {
+        BASE_ENV: {
+          A_PROCESS_ENV_VAR: 'do_not_keep_that_value',
+          A_BASE_ENV_VAR: 'keep_that_value',
+        } as AppEnvVars,
+      },
       PROCESS_ENV: { A_PROCESS_ENV_VAR: 'keep_that_value' } as AppEnvVars,
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
@@ -195,7 +197,7 @@ A_APP_ENV_VAR=keep_that_value
     const ENV = await initENV({
       NODE_ENV: NodeEnv.Development,
       APP_ENV: 'local',
-      BASE_ENV: { ISOLATED_ENV: '0' },
+      APP_CONFIG: { BASE_ENV: { ISOLATED_ENV: '0' } },
       PROCESS_ENV: { ISOLATED_ENV: '1' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,

@@ -1,9 +1,12 @@
-import { constant } from 'knifecycle';
+import { service } from 'knifecycle';
+import { env } from 'node:process';
+import type { AppEnvVars } from './ENV.js';
 
 /* Architecture Note #1.1: `PROCESS_ENV`
 
-A simple constant service to enclose the NodeJS `process.env`
- global variable.
+A simple service to enclose the NodeJS `process.env`
+ global variable. It is provided as a service to avoid
+ the process environment to be saved into builds.
 */
 
 /**
@@ -12,6 +15,8 @@ A simple constant service to enclose the NodeJS `process.env`
  * @name PROCESS_ENV
  * Provides the PROCESS_ENV service
  */
-const PROCESS_ENV = process.env;
+async function initProcessEnv(): Promise<AppEnvVars> {
+  return env as AppEnvVars;
+}
 
-export default constant('PROCESS_ENV', PROCESS_ENV);
+export default service(initProcessEnv, 'PROCESS_ENV', [], true);

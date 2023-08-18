@@ -63,10 +63,11 @@ declare module 'application-services' {
 
 ### 1.1. `PROCESS_ENV`
 
-A simple constant service to enclose the NodeJS `process.env`
- global variable.
+A simple service to enclose the NodeJS `process.env`
+ global variable. It is provided as a service to avoid
+ the process environment to be saved into builds.
 
-[See in context](./src/services/PROCESS_ENV.ts#L3-L7)
+[See in context](./src/services/PROCESS_ENV.ts#L5-L10)
 
 
 
@@ -77,7 +78,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L73-L78)
+[See in context](./src/services/ENV.ts#L74-L79)
 
 
 
@@ -87,7 +88,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L86-L91)
+[See in context](./src/services/ENV.ts#L87-L92)
 
 
 
@@ -96,7 +97,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L94-L97)
+[See in context](./src/services/ENV.ts#L95-L98)
 
 
 
@@ -124,5 +125,5 @@ The `APP_CONFIG` service allows to manage a typed application
  configuration by selectively loading the configuration file
  according to the `APP_ENV` environment variable.
 
-[See in context](./src/services/APP_CONFIG.ts#L7-L12)
+[See in context](./src/services/APP_CONFIG.ts#L8-L13)
 

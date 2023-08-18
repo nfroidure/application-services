@@ -6,6 +6,7 @@ import { noop } from '../libs/utils.js';
 import { NodeEnv } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
 import type { BaseAppEnv, LogService } from 'common-services';
+import { AppConfig } from './APP_CONFIG.js';
 
 export type BaseAppEnvVars = {
   NODE_ENV?: string;
@@ -14,7 +15,6 @@ export type BaseAppEnvVars = {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AppEnvVars extends BaseAppEnvVars {}
 
-const DEFAULT_BASE_ENV: AppEnvVars = {};
 const NODE_ENVS = Object.values(NodeEnv);
 
 /* Architecture Note #1.3: `ENV`
@@ -28,11 +28,12 @@ export default singleton(name('ENV', autoService(initENV))) as typeof initENV;
 export type ENVConfig = {
   BASE_ENV?: AppEnvVars;
 };
-export type ENVDependencies<T extends BaseAppEnv> = ENVConfig & {
+export type ENVDependencies<T extends BaseAppEnv> = {
   NODE_ENV: NodeEnv;
   APP_ENV: T;
   PROJECT_DIR: string;
   PROCESS_ENV: AppEnvVars;
+  APP_CONFIG?: AppConfig;
   log?: LogService;
   readFile?: typeof _readFile;
 };
@@ -57,11 +58,11 @@ async function initENV<T extends BaseAppEnv>({
   APP_ENV,
   PROJECT_DIR,
   PROCESS_ENV,
-  BASE_ENV = DEFAULT_BASE_ENV,
+  APP_CONFIG,
   log = noop,
   readFile = _readFile,
 }: ENVDependencies<T>): Promise<AppEnvVars> {
-  let ENV = { ...BASE_ENV };
+  let ENV = { ...(APP_CONFIG?.BASE_ENV || {}) };
 
   log('debug', `♻️ - Loading the environment service.`);
 
