@@ -9,17 +9,19 @@
 
 1. [Application services](#1-application-services)
    1. [`PROCESS_ENV`](#11-`process_env`)
-      1. [Environment isolation](#111-environment-isolation)
-      2. [`.env.node.${NODE_ENV}` files](#112-`.env.node.${node_env}`-files)
-      3. [`.env.app.${APP_ENV}` files](#113-`.env.app.${app_env}`-files)
    2. [`PROJECT_DIR`](#12-`project_dir`)
    3. [`ENV`](#13-`env`)
+      1. [Environment isolation](#131-environment-isolation)
+      2. [`.env.node.${NODE_ENV}` files](#132-`.env.node.${node_env}`-files)
+      3. [`.env.app.${APP_ENV}` files](#133-`.env.app.${app_env}`-files)
+      4. [evaluation order](#134-evaluation-order)
    4. [`APP_CONFIG`](#14-`app_config`)
    5. [Process](#15-process)
       1. [Process name](#151-process-name)
       2. [Signals handling](#152-signals-handling)
       3. [Handling services fatal errors](#153-handling-services-fatal-errors)
       4. [Uncaught exceptions](#154-uncaught-exceptions)
+   6. [`APP_ENV`](#16-`app_env`)
 
 
 ## 1. Application services
@@ -36,16 +38,19 @@ The `APP_ENV` is instead aimed to tell in which deployment
  configurations like the databases endpoints of each
  deployment environments).
 
-The `APP_ENV` values can be customized by overriding
- the AppEnv type in your own project:
-```sh
-cat "
+The `ENV` service can be customized by overriding
+ the `AppEnvVars` type in your own project. The
+ same goes for the `APP_CONFIG` service and the
+ `AppConfig` type.
+
+To do so, create an `app.d.ts` in your root source
+ folder.
+```ts
 import type {
-  BaseAppEnv,
   BaseAppConfig,
   BaseAppEnvVars,
 } from 'application-services';
-import { DBConfig } from './services/db.js';
+import type { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
   export interface AppEnvVars extends BaseAppEnvVars {
@@ -59,10 +64,9 @@ declare module 'application-services' {
       anyConfigPropYouWish: string;
     }
 }
-" > app.d.ts
 ```
 
-[See in context](./src/index.ts#L1-L40)
+[See in context](./src/index.ts#L1-L42)
 
 
 
@@ -73,36 +77,6 @@ A simple service to enclose the NodeJS `process.env`
  the process environment to be saved into builds.
 
 [See in context](./src/services/PROCESS_ENV.ts#L5-L10)
-
-
-
-#### 1.1.1. Environment isolation
-
-Per default, we take the process environment as is
- but since it could lead to leaks when building
- projects statically so one can isolate the process
- env by using the `ISOLATED_ENV` environment variable.
-
-[See in context](./src/services/ENV.ts#L75-L80)
-
-
-
-#### 1.1.2. `.env.node.${NODE_ENV}` files
-
-You may want to set some env vars depending on the
- `NODE_ENV`. We use `dotenv` to provide your such
- ability.
-
-[See in context](./src/services/ENV.ts#L104-L109)
-
-
-
-#### 1.1.3. `.env.app.${APP_ENV}` files
-
-You may need to keep some secrets out of your Git
- history fo each deployment targets too.
-
-[See in context](./src/services/ENV.ts#L112-L115)
 
 
 
@@ -120,7 +94,50 @@ A service to determine the directory of the NodeJS project
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 
-[See in context](./src/services/ENV.ts#L26-L30)
+[See in context](./src/services/ENV.ts#L48-L52)
+
+
+
+#### 1.3.1. Environment isolation
+
+Per default, we take the process environment as is
+ but since it could lead to leaks when building
+ projects statically so one can isolate the process
+ env by using the `ISOLATED_ENV` environment variable.
+
+[See in context](./src/services/ENV.ts#L97-L102)
+
+
+
+#### 1.3.2. `.env.node.${NODE_ENV}` files
+
+You may want to set some env vars depending on the
+ `NODE_ENV`. We use `dotenv` to provide your such
+ ability.
+
+[See in context](./src/services/ENV.ts#L126-L131)
+
+
+
+#### 1.3.3. `.env.app.${APP_ENV}` files
+
+You may need to keep some secrets out of your Git
+ history fo each deployment targets too.
+
+[See in context](./src/services/ENV.ts#L134-L137)
+
+
+
+#### 1.3.4. evaluation order
+
+The final environment is composed from the differents sources
+ in this order:
+- the `.env.node.${NODE_ENV}` file content if exists
+- the `.env.app.${APP_ENV}` file content if exists
+- the process ENV (so that one can override values by
+   adding environment variables).
+
+[See in context](./src/services/ENV.ts#L140-L147)
 
 
 
@@ -180,4 +197,29 @@ If an uncaught exception occurs it also attempts to
  alive when an uncaught exception is raised.
 
 [See in context](./src/services/process.ts#L107-L112)
+
+
+
+### 1.6. `APP_ENV`
+
+This is up to you to provide the `APP_ENV` service and its
+ `AppEnv` type extending the `BaseAppEnv` one, something like
+ this:
+```ts
+import { env } from 'node:process';
+import { extractAppEnv, type BaseAppEnv } from 'application-services';
+
+const APP_ENVS = ['local', 'test', 'staging', 'production'] as const;
+
+export type AppEnv = (typeof APP_ENVS)[number];
+
+const APP_ENV = extractAppEnv<AppEnv>(env.APP_ENV, APP_ENVS);
+
+// Do something with it, like declare a `knifecycle` constant.
+```
+
+Note that we made an utility function to help you extracting
+ that value.
+
+[See in context](./src/services/ENV.ts#L15-L35)
 

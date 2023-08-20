@@ -12,16 +12,19 @@ The `APP_ENV` is instead aimed to tell in which deployment
  configurations like the databases endpoints of each
  deployment environments).
 
-The `APP_ENV` values can be customized by overriding
- the AppEnv type in your own project:
-```sh
-cat "
+The `ENV` service can be customized by overriding
+ the `AppEnvVars` type in your own project. The
+ same goes for the `APP_CONFIG` service and the
+ `AppConfig` type.
+
+To do so, create an `app.d.ts` in your root source
+ folder.
+```ts
 import type {
-  BaseAppEnv,
   BaseAppConfig,
   BaseAppEnvVars,
 } from 'application-services';
-import { DBConfig } from './services/db.js';
+import type { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
   export interface AppEnvVars extends BaseAppEnvVars {
@@ -35,7 +38,6 @@ declare module 'application-services' {
       anyConfigPropYouWish: string;
     }
 }
-" > app.d.ts
 ```
 */
 

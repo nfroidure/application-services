@@ -11,6 +11,28 @@ export enum NodeEnv {
   Development = 'development',
   Production = 'production',
 }
+
+/* Architecture Note #1.6: `APP_ENV`
+
+This is up to you to provide the `APP_ENV` service and its
+ `AppEnv` type extending the `BaseAppEnv` one, something like
+ this:
+```ts
+import { env } from 'node:process';
+import { extractAppEnv, type BaseAppEnv } from 'application-services';
+
+const APP_ENVS = ['local', 'test', 'staging', 'production'] as const;
+
+export type AppEnv = (typeof APP_ENVS)[number];
+
+const APP_ENV = extractAppEnv<AppEnv>(env.APP_ENV, APP_ENVS);
+
+// Do something with it, like declare a `knifecycle` constant.
+```
+
+Note that we made an utility function to help you extracting
+ that value.
+*/
 export type BaseAppEnv = 'local';
 
 export type BaseAppEnvVars = {
@@ -72,7 +94,7 @@ async function initENV<T extends BaseAppEnv>({
 
   log('debug', `♻️ - Loading the environment service.`);
 
-  /* Architecture Note #1.1.1: Environment isolation
+  /* Architecture Note #1.3.1: Environment isolation
   Per default, we take the process environment as is
    but since it could lead to leaks when building
    projects statically so one can isolate the process
@@ -101,7 +123,7 @@ async function initENV<T extends BaseAppEnv>({
     throw new YError('E_BAD_NODE_ENV', ENV.NODE_ENV, NODE_ENVS);
   }
 
-  /* Architecture Note #1.1.2: `.env.node.${NODE_ENV}` files
+  /* Architecture Note #1.3.2: `.env.node.${NODE_ENV}` files
 
   You may want to set some env vars depending on the
    `NODE_ENV`. We use `dotenv` to provide your such
@@ -109,13 +131,13 @@ async function initENV<T extends BaseAppEnv>({
   */
   const nodeEnvFile = `.env.node.${ENV.NODE_ENV}`;
 
-  /* Architecture Note #1.1.3: `.env.app.${APP_ENV}` files
+  /* Architecture Note #1.3.3: `.env.app.${APP_ENV}` files
   You may need to keep some secrets out of your Git
    history fo each deployment targets too.
   */
   const appEnvFile = `.env.app.${APP_ENV}`;
 
-  /* Architecture Note #1.1.a: evaluation order
+  /* Architecture Note #1.3.4: evaluation order
   The final environment is composed from the differents sources
    in this order:
   - the `.env.node.${NODE_ENV}` file content if exists
