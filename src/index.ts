@@ -2,9 +2,9 @@
 
 This module manage application environments and configurations
  out of the box thanks to two separated environment variables:
- the classic `NODE_ENV` and the `APP_ENV`.
+ the classic `ENV.NODE_ENV` and the `APP_ENV`.
 
-The `NODE_ENV` variable is intended to simply tell all
+The `ENV.NODE_ENV` variable is intended to simply tell all
  tooling ecosystem in which context the code is run.
 
 The `APP_ENV` is instead aimed to tell in which deployment
@@ -39,21 +39,37 @@ declare module 'application-services' {
 ```
 */
 
+import initProcessService from './services/process.js';
 import initProcessEnvService from './services/PROCESS_ENV.js';
 import initProjectDirService from './services/PROJECT_DIR.js';
-import initEnvService from './services/ENV.js';
+import initEnvService, { NodeEnv } from './services/ENV.js';
 import initAppConfigService from './services/APP_CONFIG.js';
 import { extractAppEnv } from './libs/env.js';
 
 export type {
+  ProcessService,
+  ProcessServiceConfig,
+  ProcessServiceDependencies,
+} from './services/process.js';
+export type {
   BaseAppEnvVars,
   AppEnvVars,
-  ENVConfig,
-  ENVDependencies,
+  ProcessEnvConfig,
+  ProcessEnvDependencies,
 } from './services/ENV.js';
-export type { BaseAppConfig, AppConfig } from './services/APP_CONFIG.js';
+export type {
+  BaseAppConfig,
+  AppConfig,
+  AppConfigDependencies,
+} from './services/APP_CONFIG.js';
+export type {
+  ProjectDirService,
+  ProjectDirDependencies,
+} from './services/PROJECT_DIR.js';
 
 export {
+  NodeEnv,
+  initProcessService,
   initProcessEnvService,
   initProjectDirService,
   initEnvService,

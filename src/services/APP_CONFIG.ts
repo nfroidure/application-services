@@ -2,7 +2,8 @@ import { autoService, singleton, name } from 'knifecycle';
 import { noop } from '../libs/utils.js';
 import path from 'path';
 import { printStackTrace, YError } from 'yerror';
-import type { BaseAppEnv, ImporterService, LogService } from 'common-services';
+import type { ImporterService, LogService } from 'common-services';
+import type { BaseAppEnv, ProcessEnvConfig } from './ENV.js';
 
 /* Architecture Note #1.4: `APP_CONFIG`
 
@@ -11,8 +12,8 @@ The `APP_CONFIG` service allows to manage a typed application
  according to the `APP_ENV` environment variable.
 */
 
-export type BaseAppConfig = Record<string, unknown>;
-export interface AppConfig {}
+export type BaseAppConfig = ProcessEnvConfig;
+export interface AppConfig extends BaseAppConfig {}
 export type AppConfigDependencies<T extends BaseAppEnv> = {
   APP_ENV: T;
   PROJECT_SRC: string;
@@ -28,9 +29,9 @@ export default name(
 /**
  * Initialize the APP_CONFIG service according to the APP_ENV
  * @param  {Object}   services
- * The services APP_CONFIG depends on
+ * The services `APP_CONFIG` depends on
  * @param  {Object}   services.APP_ENV
- * The injected APP_ENV value
+ * The injected `APP_ENV` value
  * @param  {Object}   services.PROJECT_SRC
  * The project source directory
  * @param  {Object}   services.importer

@@ -3,18 +3,24 @@ import fs from 'fs';
 import path from 'path';
 import { autoService, name, singleton } from 'knifecycle';
 import { noop } from '../libs/utils.js';
-import { NodeEnv } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
-import type { BaseAppEnv, LogService } from 'common-services';
+import type { LogService } from 'common-services';
+
+export enum NodeEnv {
+  Test = 'test',
+  Development = 'development',
+  Production = 'production',
+}
+export type BaseAppEnv = 'local';
 
 export type BaseAppEnvVars = {
-  NODE_ENV?: string;
+  NODE_ENV: NodeEnv;
   ISOLATED_ENV?: string;
 };
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface AppEnvVars extends BaseAppEnvVars {}
 
-const DEFAULT_BASE_ENV: AppEnvVars = {};
+const DEFAULT_BASE_ENV: Partial<AppEnvVars> = {};
 const NODE_ENVS = Object.values(NodeEnv);
 
 /* Architecture Note #1.3: `ENV`
@@ -25,50 +31,46 @@ The `ENV` service adds a layer of configuration over just using
 
 export default singleton(name('ENV', autoService(initENV))) as typeof initENV;
 
-export type ENVConfig = {
-  BASE_ENV?: AppEnvVars;
+export type ProcessEnvConfig = {
+  BASE_ENV?: Partial<AppEnvVars>;
 };
-export type ENVDependencies<T extends BaseAppEnv> = ENVConfig & {
-  NODE_ENV: NodeEnv;
+export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
   APP_ENV: T;
   PROJECT_DIR: string;
-  PROCESS_ENV: AppEnvVars;
+  PROCESS_ENV: Partial<AppEnvVars>;
   log?: LogService;
   readFile?: typeof _readFile;
 };
 
 /**
  * Initialize the ENV service using process env plus dotenv files
+ *  loaded in `.env.node.${ENV.NODE_ENV}` and `.env.app.${APP_ENV}`.
  * @param  {Object}   services
- * The services ENV depends on
- * @param  {Object}   services.NODE_ENV
- * The injected NODE_ENV value to look for `.env.${NODE_ENV}` env file
+ * The services `ENV` depends on
+ * @param  {Object}   [services.BASE_ENV]
+ * Base env vars that will be added to the environment
+ * @param  {Object}   services.APP_ENV
+ * The injected `APP_ENV` value
+ * @param  {Object}   services.PROCESS_ENV
+ * The injected `process.env` value
  * @param  {Object}   services.PROJECT_DIR
  * The NodeJS project directory
- * @param  {Object}   [services.BASE_ENV={}]
- * An optional base environment
  * @param  {Object}   [services.log=noop]
  * An optional logging service
  * @return {Promise<Object>}
  * A promise of an object containing the actual env vars.
  */
 async function initENV<T extends BaseAppEnv>({
-  NODE_ENV,
-  APP_ENV,
-  PROJECT_DIR,
-  PROCESS_ENV,
   BASE_ENV = DEFAULT_BASE_ENV,
+  APP_ENV,
+  PROCESS_ENV,
+  PROJECT_DIR,
   log = noop,
   readFile = _readFile,
-}: ENVDependencies<T>): Promise<AppEnvVars> {
+}: ProcessEnvDependencies<T>): Promise<AppEnvVars> {
   let ENV = { ...BASE_ENV };
 
   log('debug', `♻️ - Loading the environment service.`);
-
-  if (!NODE_ENVS.includes(NODE_ENV)) {
-    log('error', `❌ - Non-standard NODE_ENV value detected: "${NODE_ENV}".`);
-    throw new YError('E_BAD_NODE_ENV', NODE_ENV, NODE_ENVS);
-  }
 
   /* Architecture Note #1.1.1: Environment isolation
   Per default, we take the process environment as is
@@ -83,13 +85,29 @@ async function initENV<T extends BaseAppEnv>({
     log('warning', `🖥 - Using an isolated env.`);
   }
 
+  if (!ENV.NODE_ENV) {
+    log(
+      'warning',
+      `⚠ - NODE_ENV environment variable is not set, setting it to "developement".`,
+    );
+    ENV.NODE_ENV = NodeEnv.Development;
+  }
+
+  if (!NODE_ENVS.includes(ENV.NODE_ENV)) {
+    log(
+      'error',
+      `❌ - Non-standard NODE_ENV value detected: "${ENV.NODE_ENV}".`,
+    );
+    throw new YError('E_BAD_NODE_ENV', ENV.NODE_ENV, NODE_ENVS);
+  }
+
   /* Architecture Note #1.1.2: `.env.node.${NODE_ENV}` files
 
   You may want to set some env vars depending on the
    `NODE_ENV`. We use `dotenv` to provide your such
    ability.
   */
-  const nodeEnvFile = `.env.node.${NODE_ENV}`;
+  const nodeEnvFile = `.env.node.${ENV.NODE_ENV}`;
 
   /* Architecture Note #1.1.3: `.env.app.${APP_ENV}` files
   You may need to keep some secrets out of your Git
@@ -113,10 +131,10 @@ async function initENV<T extends BaseAppEnv>({
     ])
   ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), {});
 
-  log('warning', `🔂 - Running with "${NODE_ENV}" node environment.`);
+  log('warning', `🔂 - Running with "${ENV.NODE_ENV}" node environment.`);
   log('warning', `🔂 - Running with "${APP_ENV}" application environment.`);
 
-  return ENV;
+  return ENV as AppEnvVars;
 }
 
 async function _readFile(path: string): Promise<Buffer> {
@@ -136,9 +154,11 @@ async function _readEnvFile<T extends BaseAppEnv>(
     PROJECT_DIR,
     readFile,
     log,
-  }: Required<Pick<ENVDependencies<T>, 'PROJECT_DIR' | 'readFile' | 'log'>>,
+  }: Required<
+    Pick<ProcessEnvDependencies<T>, 'PROJECT_DIR' | 'readFile' | 'log'>
+  >,
   filePath: string,
-): Promise<AppEnvVars> {
+): Promise<Partial<AppEnvVars>> {
   const fullFilePath = path.join(PROJECT_DIR, filePath);
 
   log('debug', `💾 - Trying to load .env file at "${fullFilePath}".`);
