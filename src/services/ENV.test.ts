@@ -1,11 +1,12 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
+import { readFile as _readFile } from 'node:fs/promises';
 import initENV, { NodeEnv } from './ENV.js';
 import type { AppEnvVars } from './ENV.js';
 import type { LogService } from 'common-services';
 
 describe('initENV', () => {
   const log = jest.fn<LogService>();
-  const readFile = jest.fn<(path: string) => Promise<Buffer>>();
+  const readFile = jest.fn<typeof _readFile>();
 
   beforeEach(() => {
     log.mockReset();
@@ -36,7 +37,7 @@ ISOLATED_ENV=
       PROCESS_ENV: { ISOLATED_ENV: '0' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
-      readFile,
+      readFile: readFile as typeof _readFile,
     });
 
     expect({
@@ -49,7 +50,7 @@ ISOLATED_ENV=
     "DB_HOST": "test2.localhost",
     "DB_PASSWORD": "oudelali",
     "DEV_MODE": "1",
-    "ISOLATED_ENV": "1",
+    "ISOLATED_ENV": "",
     "NODE_ENV": "production",
   },
   "logCalls": [
@@ -101,8 +102,7 @@ ISOLATED_ENV=
   it('should work respect the documentation precedence', async () => {
     readFile.mockResolvedValueOnce(
       Buffer.from(
-        `A_BASE_ENV_VAR=do_not_keep_that_value
-A_PROCESS_ENV_VAR=do_not_keep_that_value
+        `A_PROCESS_ENV_VAR=do_not_keep_that_value
 A_APP_ENV_VAR=do_not_keep_that_value
 A_NODE_ENV_VAR=keep_that_value
 `,
@@ -110,8 +110,7 @@ A_NODE_ENV_VAR=keep_that_value
     );
     readFile.mockResolvedValueOnce(
       Buffer.from(
-        `A_BASE_ENV_VAR=do_not_keep_that_value
-A_PROCESS_ENV_VAR=do_not_keep_that_value
+        `A_PROCESS_ENV_VAR=do_not_keep_that_value
 A_APP_ENV_VAR=keep_that_value
 `,
       ),
@@ -129,7 +128,7 @@ A_APP_ENV_VAR=keep_that_value
       } as AppEnvVars,
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
-      readFile,
+      readFile: readFile as typeof _readFile,
     });
 
     expect({
@@ -200,7 +199,7 @@ A_APP_ENV_VAR=keep_that_value
       PROCESS_ENV: { ISOLATED_ENV: '1' },
       PROJECT_DIR: '/home/whoami/my-whook-project',
       log,
-      readFile,
+      readFile: readFile as typeof _readFile,
     });
 
     expect({
@@ -224,7 +223,7 @@ A_APP_ENV_VAR=keep_that_value
     ],
     [
       "warning",
-      "⚠ - NODE_ENV environment variable is not set, setting it to "developement".",
+      "⚠ - NODE_ENV environment variable is not set, setting it to "development".",
     ],
     [
       "debug",

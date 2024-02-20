@@ -1,13 +1,11 @@
+import { printStackTrace } from 'yerror';
 import { autoProvider, singleton } from 'knifecycle';
+import { noop } from '../libs/utils.js';
 import type { FatalErrorService, Knifecycle } from 'knifecycle';
 import type { LogService } from 'common-services';
 import type { AppEnvVars, BaseAppEnv } from './ENV.js';
 
 const DEFAULT_SIGNALS: NodeJS.Signals[] = ['SIGTERM', 'SIGINT'];
-
-function noop(): void {
-  return undefined;
-}
 
 export type ProcessService = {
   service: NodeJS.Process;
@@ -100,7 +98,7 @@ async function initProcess<T extends BaseAppEnv>({
   */
   $fatalError.errorPromise.catch((err) => {
     log('error', '💀 - Fatal error');
-    log('error-stack', err.stack || err);
+    log('error-stack', printStackTrace(err as Error));
     terminate('FATAL');
   });
 
@@ -114,14 +112,7 @@ async function initProcess<T extends BaseAppEnv>({
 
   function catchUncaughtException(err: Error) {
     log('error', '💀 - Uncaught Exception');
-    log(
-      'error-stack',
-      (err as Error).stack ||
-        // Catching anything that could be inside err
-        // since some people have the nice idea to
-        // throw undefined or just a string.
-        '' + (err as unknown as string),
-    );
+    log('error-stack', printStackTrace(err as Error));
     terminate('ERR');
   }
 
@@ -148,14 +139,7 @@ async function initProcess<T extends BaseAppEnv>({
       exit(code);
     } catch (err) {
       log('error', '🤔 - Could not gracefully shutdown.');
-      log(
-        'error-stack',
-        (err as Error).stack ||
-          // Catching anything that could be inside err
-          // since some people have the nice idea to
-          // throw undefined or just a string.
-          '' + (err as unknown as string),
-      );
+      log('error-stack', printStackTrace(err as Error));
       exit(code);
     }
   }

@@ -54,7 +54,7 @@ import type { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
   export interface AppEnvVars extends BaseAppEnvVars {
-    DRY_RUN: string;
+    ANY_ENV_VAR_YOU_WISH: string;
   }
 
   // Overriding with your application configurations
@@ -105,7 +105,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L97-L102)
+[See in context](./src/services/ENV.ts#L101-L106)
 
 
 
@@ -115,7 +115,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L126-L131)
+[See in context](./src/services/ENV.ts#L130-L135)
 
 
 
@@ -124,20 +124,20 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L134-L137)
+[See in context](./src/services/ENV.ts#L138-L141)
 
 
 
 #### 1.3.4. evaluation order
 
-The final environment is composed from the differents sources
+The final environment is composed from the different sources
  in this order:
 - the `.env.node.${NODE_ENV}` file content if exists
 - the `.env.app.${APP_ENV}` file content if exists
 - the process ENV (so that one can override values by
    adding environment variables).
 
-[See in context](./src/services/ENV.ts#L140-L147)
+[See in context](./src/services/ENV.ts#L144-L151)
 
 
 
@@ -158,7 +158,7 @@ The `process` service takes care of the process status.
 It returns nothing and should be injected only for its
  side effects.
 
-[See in context](./src/services/process.ts#L30-L35)
+[See in context](./src/services/process.ts#L28-L33)
 
 
 
@@ -166,7 +166,7 @@ It returns nothing and should be injected only for its
 
 It also set the process name with the actual NODE_ENV.
 
-[See in context](./src/services/process.ts#L77-L80)
+[See in context](./src/services/process.ts#L75-L78)
 
 
 
@@ -177,7 +177,7 @@ It also handle SIGINT and SIGTERM signals to allow to
  to handle can be customized by injecting the `SIGNALS`
  optional dependencies.
 
-[See in context](./src/services/process.ts#L85-L91)
+[See in context](./src/services/process.ts#L83-L89)
 
 
 
@@ -186,7 +186,7 @@ It also handle SIGINT and SIGTERM signals to allow to
 If an error occurs it attempts to gracefully exit
 to give it a chance to finish properly.
 
-[See in context](./src/services/process.ts#L96-L100)
+[See in context](./src/services/process.ts#L94-L98)
 
 
 
@@ -196,7 +196,7 @@ If an uncaught exception occurs it also attempts to
  gracefully exit since a process should never be kept
  alive when an uncaught exception is raised.
 
-[See in context](./src/services/process.ts#L107-L112)
+[See in context](./src/services/process.ts#L105-L110)
 
 
 

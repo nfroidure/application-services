@@ -1,5 +1,5 @@
-import { service } from 'knifecycle';
 import { env } from 'node:process';
+import { service } from 'knifecycle';
 import type { AppEnvVars } from './ENV.js';
 
 /* Architecture Note #1.1: `PROCESS_ENV`

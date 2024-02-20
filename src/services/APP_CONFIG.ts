@@ -1,6 +1,6 @@
+import { join as pathJoin } from 'node:path';
 import { autoService, singleton, name } from 'knifecycle';
 import { noop } from '../libs/utils.js';
-import path from 'path';
 import { printStackTrace, YError } from 'yerror';
 import type { ImporterService, LogService } from 'common-services';
 import type { BaseAppEnv, ProcessEnvConfig } from './ENV.js';
@@ -49,7 +49,7 @@ async function initAppConfig<T extends BaseAppEnv>({
 }: AppConfigDependencies<T>): Promise<AppConfig> {
   log('debug', `🏭 - Initializing the APP_CONFIG service.`);
 
-  const configPath = path.join(PROJECT_SRC, 'config', APP_ENV, 'config.js');
+  const configPath = pathJoin(PROJECT_SRC, 'config', APP_ENV, 'config.js');
 
   log('warning', `⚡ - Loading configurations from "${configPath}".`);
 

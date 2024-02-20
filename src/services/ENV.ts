@@ -1,6 +1,6 @@
+import { readFile as _readFile } from 'node:fs/promises';
+import path from 'node:path';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
 import { autoService, name, singleton } from 'knifecycle';
 import { noop } from '../libs/utils.js';
 import { YError, printStackTrace } from 'yerror';
@@ -90,7 +90,11 @@ async function initENV<T extends BaseAppEnv>({
   log = noop,
   readFile = _readFile,
 }: ProcessEnvDependencies<T>): Promise<AppEnvVars> {
-  let ENV = { ...BASE_ENV };
+  let ENV: Partial<AppEnvVars> = BASE_ENV.NODE_ENV
+    ? {
+        NODE_ENV: BASE_ENV.NODE_ENV,
+      }
+    : {};
 
   log('debug', `♻️ - Loading the environment service.`);
 
@@ -110,7 +114,7 @@ async function initENV<T extends BaseAppEnv>({
   if (!ENV.NODE_ENV) {
     log(
       'warning',
-      `⚠ - NODE_ENV environment variable is not set, setting it to "developement".`,
+      `⚠ - NODE_ENV environment variable is not set, setting it to "${NodeEnv.Development}".`,
     );
     ENV.NODE_ENV = NodeEnv.Development;
   }
@@ -138,7 +142,7 @@ async function initENV<T extends BaseAppEnv>({
   const appEnvFile = `.env.app.${APP_ENV}`;
 
   /* Architecture Note #1.3.4: evaluation order
-  The final environment is composed from the differents sources
+  The final environment is composed from the different sources
    in this order:
   - the `.env.node.${NODE_ENV}` file content if exists
   - the `.env.app.${APP_ENV}` file content if exists
@@ -147,6 +151,7 @@ async function initENV<T extends BaseAppEnv>({
   */
   ENV = (
     await Promise.all([
+      BASE_ENV,
       _readEnvFile({ PROJECT_DIR, readFile, log }, nodeEnvFile),
       _readEnvFile({ PROJECT_DIR, readFile, log }, appEnvFile),
       ENV,
@@ -157,18 +162,6 @@ async function initENV<T extends BaseAppEnv>({
   log('warning', `🔂 - Running with "${APP_ENV}" application environment.`);
 
   return ENV as AppEnvVars;
-}
-
-async function _readFile(path: string): Promise<Buffer> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(path, (err, data) => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve(data);
-    });
-  });
 }
 
 async function _readEnvFile<T extends BaseAppEnv>(

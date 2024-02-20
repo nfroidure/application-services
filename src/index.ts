@@ -28,7 +28,7 @@ import type { DBConfig } from './services/db.js';
 
 declare module 'application-services' {
   export interface AppEnvVars extends BaseAppEnvVars {
-    DRY_RUN: string;
+    ANY_ENV_VAR_YOU_WISH: string;
   }
 
   // Overriding with your application configurations
