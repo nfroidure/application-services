@@ -1,3 +1,23 @@
+# [5.0.0](https://github.com/nfroidure/application-services/compare/v4.0.0...v5.0.0) (2024-02-20)
+
+
+### Code Refactoring
+
+* **env:** fix the env order to be more logical ([cff450c](https://github.com/nfroidure/application-services/commit/cff450cf1e56d7b2a4d007d849778630aa82ad78))
+
+
+### Features
+
+* **env:** add more check for env integrity ([2020cfe](https://github.com/nfroidure/application-services/commit/2020cfe28e6ef692118a553573c718dc8656e2db))
+
+
+### BREAKING CHANGES
+
+* **env:** Env vars won't be loaded in the same order. That said, it is probably the order you
+would expect.
+
+
+
 # [4.0.0](https://github.com/nfroidure/application-services/compare/v3.0.1...v4.0.0) (2023-08-20)
 
 
