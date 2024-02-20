@@ -60,7 +60,15 @@ ISOLATED_ENV=
     ],
     [
       "warning",
+      "🔴 - Running with "local" application environment.",
+    ],
+    [
+      "warning",
       "🖥 - Using an isolated env.",
+    ],
+    [
+      "warning",
+      "🔂 - Running with "production" node environment.",
     ],
     [
       "debug",
@@ -77,14 +85,6 @@ ISOLATED_ENV=
     [
       "warning",
       "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.app.local".",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "production" node environment.",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "local" application environment.",
     ],
   ],
   "readFileCalls": [
@@ -150,8 +150,16 @@ A_APP_ENV_VAR=keep_that_value
       "♻️ - Loading the environment service.",
     ],
     [
+      "warning",
+      "🔴 - Running with "local" application environment.",
+    ],
+    [
       "debug",
       "🖥 - Using the process env.",
+    ],
+    [
+      "warning",
+      "🔂 - Running with "production" node environment.",
     ],
     [
       "debug",
@@ -168,14 +176,6 @@ A_APP_ENV_VAR=keep_that_value
     [
       "warning",
       "🖬 - Loaded .env file at "/home/whoami/my-whook-project/.env.app.local".",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "production" node environment.",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "local" application environment.",
     ],
   ],
   "readFileCalls": [
@@ -219,11 +219,19 @@ A_APP_ENV_VAR=keep_that_value
     ],
     [
       "warning",
+      "🔴 - Running with "local" application environment.",
+    ],
+    [
+      "warning",
       "🖥 - Using an isolated env.",
     ],
     [
       "warning",
       "⚠ - NODE_ENV environment variable is not set, setting it to "development".",
+    ],
+    [
+      "warning",
+      "🔂 - Running with "development" node environment.",
     ],
     [
       "debug",
@@ -240,14 +248,6 @@ A_APP_ENV_VAR=keep_that_value
     [
       "debug",
       "🚫 - No file found at "/home/whoami/my-whook-project/.env.app.local".",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "development" node environment.",
-    ],
-    [
-      "warning",
-      "🔂 - Running with "local" application environment.",
     ],
   ],
   "readFileCalls": [

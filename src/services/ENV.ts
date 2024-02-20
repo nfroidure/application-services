@@ -97,6 +97,7 @@ async function initENV<T extends BaseAppEnv>({
     : {};
 
   log('debug', `♻️ - Loading the environment service.`);
+  log('warning', `🔴 - Running with "${APP_ENV}" application environment.`);
 
   /* Architecture Note #1.3.1: Environment isolation
   Per default, we take the process environment as is
@@ -126,6 +127,10 @@ async function initENV<T extends BaseAppEnv>({
     );
     throw new YError('E_BAD_NODE_ENV', ENV.NODE_ENV, NODE_ENVS);
   }
+
+  const FINAL_NODE_ENV = ENV.NODE_ENV;
+
+  log('warning', `🔂 - Running with "${FINAL_NODE_ENV}" node environment.`);
 
   /* Architecture Note #1.3.2: `.env.node.${NODE_ENV}` files
 
@@ -158,8 +163,13 @@ async function initENV<T extends BaseAppEnv>({
     ])
   ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), {});
 
-  log('warning', `🔂 - Running with "${ENV.NODE_ENV}" node environment.`);
-  log('warning', `🔂 - Running with "${APP_ENV}" application environment.`);
+  if (ENV.NODE_ENV !== FINAL_NODE_ENV) {
+    log(
+      'error',
+      `❌ - Illegal attempt to change the NODE_ENV value via env files: "${ENV.NODE_ENV}".`,
+    );
+    throw new YError('E_BAD_ENV', ENV.NODE_ENV, FINAL_NODE_ENV);
+  }
 
   return ENV as AppEnvVars;
 }
