@@ -1,6 +1,6 @@
 import { printStackTrace } from 'yerror';
 import { autoProvider, singleton } from 'knifecycle';
-import { noop } from '../libs/utils.js';
+import { noop } from 'common-services';
 import type { FatalErrorService, Knifecycle } from 'knifecycle';
 import type { LogService } from 'common-services';
 import type { AppEnvVars, BaseAppEnv } from './ENV.js';

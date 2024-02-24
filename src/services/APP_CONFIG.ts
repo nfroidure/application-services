@@ -1,6 +1,6 @@
 import { join as pathJoin } from 'node:path';
 import { autoService, singleton, name } from 'knifecycle';
-import { noop } from '../libs/utils.js';
+import { noop } from 'common-services';
 import { printStackTrace, YError } from 'yerror';
 import type { ImporterService, LogService } from 'common-services';
 import type { BaseAppEnv, ProcessEnvConfig } from './ENV.js';

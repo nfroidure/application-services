@@ -8,7 +8,6 @@
 > Out of the box application environment and configuration service.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/application-services/blob/main/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/nfroidure/application-services/badge.svg?branch=main)](https://coveralls.io/github/nfroidure/application-services?branch=main)
 
 
 [//]: # (::contents:start)

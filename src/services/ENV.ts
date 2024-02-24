@@ -2,7 +2,7 @@ import { readFile as _readFile } from 'node:fs/promises';
 import path from 'node:path';
 import dotenv from 'dotenv';
 import { autoService, name, singleton } from 'knifecycle';
-import { noop } from '../libs/utils.js';
+import { noop } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
 import type { LogService } from 'common-services';
 

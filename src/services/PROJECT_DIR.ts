@@ -1,7 +1,7 @@
 import { packageDirectory } from 'pkg-dir';
 import { name, autoService, singleton } from 'knifecycle';
 import { YError } from 'yerror';
-import { noop } from '../libs/utils.js';
+import { noop } from 'common-services';
 import type { LogService } from 'common-services';
 
 /* Architecture Note #1.2: `PROJECT_DIR`
