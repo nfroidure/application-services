@@ -41,11 +41,11 @@ declare module 'application-services' {
 ```
 */
 
-import initProcessService from './services/process.js';
-import initProcessEnvService from './services/PROCESS_ENV.js';
-import initProjectDirService from './services/PROJECT_DIR.js';
-import initEnvService, { NodeEnv } from './services/ENV.js';
-import initAppConfigService from './services/APP_CONFIG.js';
+import initProcess from './services/process.js';
+import initProcessEnv from './services/PROCESS_ENV.js';
+import initProjectDir from './services/PROJECT_DIR.js';
+import initEnv, { NodeEnv } from './services/ENV.js';
+import initAppConfig from './services/APP_CONFIG.js';
 import { extractAppEnv } from './libs/env.js';
 
 export type {
@@ -71,10 +71,10 @@ export type {
 
 export {
   NodeEnv,
-  initProcessService,
-  initProcessEnvService,
-  initProjectDirService,
-  initEnvService,
-  initAppConfigService,
+  initProcess,
+  initProcessEnv,
+  initProjectDir,
+  initEnv,
+  initAppConfig,
   extractAppEnv,
 };

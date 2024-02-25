@@ -60,7 +60,7 @@ Initialize the APP_CONFIG service according to the APP_ENV
 | --- | --- | --- | --- |
 | services | <code>Object</code> |  | The services `APP_CONFIG` depends on |
 | services.APP_ENV | <code>Object</code> |  | The injected `APP_ENV` value |
-| services.PROJECT_SRC | <code>Object</code> |  | The project source directory |
+| services.MAIN_FILE_URL | <code>String</code> |  | An URL pointing to the main file run |
 | services.importer | <code>Object</code> |  | A service allowing to dynamically import ES modules |
 | [services.log] | <code>Object</code> | <code>noop</code> | An optional logging service |
 

@@ -1,4 +1,4 @@
-import { join as pathJoin } from 'node:path';
+import { join as pathJoin, extname } from 'node:path';
 import { autoService, singleton, name } from 'knifecycle';
 import { noop } from 'common-services';
 import { printStackTrace, YError } from 'yerror';
@@ -16,7 +16,7 @@ export type BaseAppConfig = ProcessEnvConfig;
 export interface AppConfig extends BaseAppConfig {}
 export type AppConfigDependencies<T extends BaseAppEnv> = {
   APP_ENV: T;
-  PROJECT_SRC: string;
+  MAIN_FILE_URL: string;
   importer: ImporterService<{ default: AppConfig }>;
   log?: LogService;
 };
@@ -32,8 +32,8 @@ export default name(
  * The services `APP_CONFIG` depends on
  * @param  {Object}   services.APP_ENV
  * The injected `APP_ENV` value
- * @param  {Object}   services.PROJECT_SRC
- * The project source directory
+ * @param  {String}   services.MAIN_FILE_URL
+ * An URL pointing to the main file run
  * @param  {Object}   services.importer
  * A service allowing to dynamically import ES modules
  * @param  {Object}   [services.log=noop]
@@ -43,13 +43,17 @@ export default name(
  */
 async function initAppConfig<T extends BaseAppEnv>({
   APP_ENV,
-  PROJECT_SRC,
+  MAIN_FILE_URL,
   importer,
   log = noop,
 }: AppConfigDependencies<T>): Promise<AppConfig> {
   log('debug', `🏭 - Initializing the APP_CONFIG service.`);
 
-  const configPath = pathJoin(PROJECT_SRC, 'config', APP_ENV, 'config.js');
+  const projectExtension = extname(MAIN_FILE_URL);
+  const configPath = new URL(
+    pathJoin('.', 'config', APP_ENV, 'config' + projectExtension),
+    MAIN_FILE_URL,
+  ).toString();
 
   log('warning', `⚡ - Loading configurations from "${configPath}".`);
 
