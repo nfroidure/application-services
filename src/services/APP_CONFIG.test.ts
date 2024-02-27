@@ -25,7 +25,7 @@ describe('initAppConfig', () => {
 
     const APP_CONFIG = await initAppConfig({
       APP_ENV: 'local',
-      PROJECT_SRC: '/home/whoami/my-whook-project/src',
+      MAIN_FILE_URL: 'file:///home/whoami/my-whook-project/src/index.js',
       log,
       importer,
     });
@@ -43,7 +43,7 @@ describe('initAppConfig', () => {
   },
   "importerCalls": [
     [
-      "/home/whoami/my-whook-project/src/config/local/config.js",
+      "file:///home/whoami/my-whook-project/src/config/local/config.js",
     ],
   ],
   "logCalls": [
@@ -53,7 +53,7 @@ describe('initAppConfig', () => {
     ],
     [
       "warning",
-      "⚡ - Loading configurations from "/home/whoami/my-whook-project/src/config/local/config.js".",
+      "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
     ],
   ],
 }
@@ -68,7 +68,7 @@ describe('initAppConfig', () => {
     try {
       await initAppConfig({
         APP_ENV: 'local',
-        PROJECT_SRC: '/home/whoami/my-whook-project/src',
+        MAIN_FILE_URL: 'file:///home/whoami/my-whook-project/src/index.js',
         log,
         importer,
       });
@@ -83,11 +83,11 @@ describe('initAppConfig', () => {
 {
   "errorCode": "E_NO_CONFIG",
   "errorParams": [
-    "/home/whoami/my-whook-project/src/config/local/config.js",
+    "file:///home/whoami/my-whook-project/src/config/local/config.js",
   ],
   "importerCalls": [
     [
-      "/home/whoami/my-whook-project/src/config/local/config.js",
+      "file:///home/whoami/my-whook-project/src/config/local/config.js",
     ],
   ],
   "logCalls": [
@@ -97,11 +97,11 @@ describe('initAppConfig', () => {
     ],
     [
       "warning",
-      "⚡ - Loading configurations from "/home/whoami/my-whook-project/src/config/local/config.js".",
+      "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
     ],
     [
       "warning",
-      "☢ - Could not load configuration file "/home/whoami/my-whook-project/src/config/local/config.js".",
+      "☢ - Could not load configuration file "file:///home/whoami/my-whook-project/src/config/local/config.js".",
     ],
   ],
 }

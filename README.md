@@ -8,6 +8,7 @@
 > Out of the box application environment and configuration service.
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/application-services/blob/main/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/nfroidure/application-services/badge.svg?branch=main)](https://coveralls.io/github/nfroidure/application-services?branch=main)
 
 
 [//]: # (::contents:start)
@@ -28,13 +29,14 @@ Out of the box, standard compliant, application environment:
 - leverage `dotenv` to read environment variables,
 - manage separate and type checked applications configurations for each
   deployment environments and allows loading it automatically (in the
-  `${PROJECT_SRC}/configs/${APP_ENV}/index` file).
+  `./configs/${APP_ENV}/index` file).
 
 It requires `log` and `importer` services to be passed in, you can find
 implementations in the
 [`common-services`](https://github.com/nfroidure/common-services) project.
 
-It also relies on constant services you will have to provide: `APP_ENV`, `NODE_ENV` and the `PROJECT_SRC` (directory where actual code is).
+It also relies on constant services you will have to provide: `APP_ENV`,
+`NODE_ENV` and the `MAIN_FILE_URL` (directory where actual code is).
 
 [//]: # (::contents:end)
 
@@ -100,7 +102,7 @@ Initialize the APP_CONFIG service according to the APP_ENV
 | --- | --- | --- | --- |
 | services | <code>Object</code> |  | The services `APP_CONFIG` depends on |
 | services.APP_ENV | <code>Object</code> |  | The injected `APP_ENV` value |
-| services.PROJECT_SRC | <code>Object</code> |  | The project source directory |
+| services.MAIN_FILE_URL | <code>String</code> |  | An URL pointing to the main file run |
 | services.importer | <code>Object</code> |  | A service allowing to dynamically import ES modules |
 | [services.log] | <code>Object</code> | <code>noop</code> | An optional logging service |
 

@@ -21,6 +21,7 @@
       "jsdocs",
       "jsarch",
       "ghactions",
+      "coveralls",
       "codeclimate"
     ]
   },
@@ -70,7 +71,7 @@
   },
   "homepage": "https://github.com/nfroidure/application-services#readme",
   "dependencies": {
-    "common-services": "^15.1.0",
+    "common-services": "^16.0.0",
     "dotenv": "^16.4.5",
     "knifecycle": "^17.0.1",
     "pkg-dir": "^8.0.0",
@@ -93,13 +94,13 @@
     "jsarch": "^6.0.3",
     "jsdoc-to-markdown": "^8.0.0",
     "metapak": "^5.1.8",
-    "metapak-nfroidure": "16.0.0",
+    "metapak-nfroidure": "17.0.0",
     "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=18.16.0"
+    "node": ">=20.11.1"
   },
   "config": {
     "commitizen": {
