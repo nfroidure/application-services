@@ -21,6 +21,7 @@
       "jsdocs",
       "jsarch",
       "ghactions",
+      "coveralls",
       "codeclimate"
     ]
   },
