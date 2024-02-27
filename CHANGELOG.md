@@ -1,3 +1,13 @@
+# [6.0.0](https://github.com/nfroidure/application-services/compare/v5.0.1...v6.0.0) (2024-02-27)
+
+
+### Features
+
+* **build:** add coveralls ([e3e6363](https://github.com/nfroidure/application-services/commit/e3e63635aa68bac950c044ac594a6af54ccbf717))
+* **esm:** full esm support ([19b5360](https://github.com/nfroidure/application-services/commit/19b53601b70d0dc37287949cf5cd4979707d9c56))
+
+
+
 ## [5.0.1](https://github.com/nfroidure/application-services/compare/v5.0.0...v5.0.1) (2024-02-24)
 
 
