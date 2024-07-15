@@ -1,3 +1,7 @@
+# [6.1.0](https://github.com/nfroidure/application-services/compare/v6.0.0...v6.1.0) (2024-07-15)
+
+
+
 # [6.0.0](https://github.com/nfroidure/application-services/compare/v5.0.1...v6.0.0) (2024-02-27)
 
 
