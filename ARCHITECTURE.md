@@ -22,6 +22,7 @@
       3. [Handling services fatal errors](#153-handling-services-fatal-errors)
       4. [Uncaught exceptions](#154-uncaught-exceptions)
    6. [`APP_ENV`](#16-`app_env`)
+   7. [Time mock](#17-time-mock)
 
 
 ## 1. Application services
@@ -222,4 +223,14 @@ Note that we made an utility function to help you extracting
  that value.
 
 [See in context](./src/services/ENV.ts#L15-L35)
+
+
+
+### 1.7. Time mock
+
+The `timeMock` service allows developers to mock the time
+ of the application by injecting it instead of the `time`
+ service provided by the `common-services` module.
+
+[See in context](./src/services/timeMock.ts#L23-L28)
 

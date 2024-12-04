@@ -46,6 +46,7 @@ import initProcessEnv from './services/PROCESS_ENV.js';
 import initProjectDir from './services/PROJECT_DIR.js';
 import initEnv, { NodeEnv } from './services/ENV.js';
 import initAppConfig from './services/APP_CONFIG.js';
+import initTimeMock from './services/timeMock.js';
 import { extractAppEnv } from './libs/env.js';
 
 export type {
@@ -68,6 +69,11 @@ export type {
   ProjectDirService,
   ProjectDirDependencies,
 } from './services/PROJECT_DIR.js';
+export type {
+  TimeMockConfig,
+  TimeMockDependencies,
+  ClockMockService,
+} from './services/timeMock.js';
 
 export {
   NodeEnv,
@@ -76,5 +82,6 @@ export {
   initProjectDir,
   initEnv,
   initAppConfig,
+  initTimeMock,
   extractAppEnv,
 };

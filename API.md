@@ -27,6 +27,9 @@ Provides the PROCESS_ENV service</a> : <code>Object</code></dt>
 <dt><a href="#initProjectDirectory">initProjectDirectory(services)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
 <dd><p>Initialize the PROJECT_DIR service</p>
 </dd>
+<dt><a href="#initTimeMock">initTimeMock(services)</a> ⇒ <code>Promise.&lt;function()&gt;</code></dt>
+<dd><p>Instantiate the time mock service</p>
+</dd>
 </dl>
 
 <a name="PROCESS_ENV
@@ -114,3 +117,41 @@ Initialize the PROJECT_DIR service
 | services | <code>Object</code> |  | The services PROJECT_DIR depends on |
 | [services.log] | <code>Object</code> | <code>noop</code> | An optional logging service |
 
+<a name="initTimeMock"></a>
+
+## initTimeMock(services) ⇒ <code>Promise.&lt;function()&gt;</code>
+Instantiate the time mock service
+
+**Kind**: global function  
+**Returns**: <code>Promise.&lt;function()&gt;</code> - A promise of the time function  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| services | <code>Object</code> |  | The services to inject |
+| services.CLOCK_MOCK | <code>Object</code> |  | An object to store the time mock state |
+| [services.time] | <code>Object</code> | <code>noop</code> | A time function |
+| [services.log] | <code>Object</code> | <code>noop</code> | A logging function |
+
+**Example**  
+```js
+import {
+  DEFAULT_LOGGER,
+  initLog,
+} from 'common-services';
+import {
+  initTimeMock,
+} from 'application-services';
+
+const CLOCK_MOCK = {
+  referenceTime: Date.now(),
+  mockedTime: Date.parse('2012-12-20T20:20:20Z'),
+  isFixed: false,
+};
+const log = await initLog({
+  logger: DEFAULT_LOGGER,
+});
+
+const time = await initTimeMock({
+  log,
+});
+```
