@@ -1,8 +1,8 @@
 import { describe, it, beforeEach, jest, expect } from '@jest/globals';
 import { readFile as _readFile } from 'node:fs/promises';
 import initENV, { NodeEnv } from './ENV.js';
-import type { AppEnvVars } from './ENV.js';
-import type { LogService } from 'common-services';
+import { type AppEnvVars } from './ENV.js';
+import { type LogService } from 'common-services';
 
 describe('initENV', () => {
   const log = jest.fn<LogService>();

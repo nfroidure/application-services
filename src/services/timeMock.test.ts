@@ -1,7 +1,7 @@
 import { describe, beforeEach, test, expect, jest } from '@jest/globals';
 import { Knifecycle, constant } from 'knifecycle';
 import initTimeMockService, { type ClockMockService } from './timeMock.js';
-import { TimeService, type LogService } from 'common-services';
+import { type TimeService, type LogService } from 'common-services';
 
 describe('TimeMock service', () => {
   const log = jest.fn<LogService>();

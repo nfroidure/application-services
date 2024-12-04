@@ -1,6 +1,6 @@
 import { env } from 'node:process';
-import { service } from 'knifecycle';
-import type { AppEnvVars } from './ENV.js';
+import { service, location } from 'knifecycle';
+import { type AppEnvVars } from './ENV.js';
 
 /* Architecture Note #1.1: `PROCESS_ENV`
 
@@ -19,4 +19,7 @@ async function initProcessEnv(): Promise<AppEnvVars> {
   return env as AppEnvVars;
 }
 
-export default service(initProcessEnv, 'PROCESS_ENV', [], true);
+export default location(
+  service(initProcessEnv, 'PROCESS_ENV', [], true),
+  import.meta.url,
+);

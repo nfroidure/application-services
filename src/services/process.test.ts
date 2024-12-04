@@ -10,7 +10,7 @@ import { YError } from 'yerror';
 import { Knifecycle, constant } from 'knifecycle';
 import initProcessService from './process.js';
 import { NodeEnv } from './ENV.js';
-import type { LogService } from 'common-services';
+import { type LogService } from 'common-services';
 
 describe('Process service', () => {
   const log = jest.fn<LogService>();

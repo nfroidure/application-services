@@ -1,10 +1,10 @@
 import { readFile as _readFile } from 'node:fs/promises';
 import path from 'node:path';
 import dotenv from 'dotenv';
-import { autoService, name, singleton } from 'knifecycle';
+import { autoService, name, singleton, location } from 'knifecycle';
 import { noop } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
-import type { LogService } from 'common-services';
+import { type LogService } from 'common-services';
 
 export enum NodeEnv {
   Test = 'test',
@@ -39,7 +39,7 @@ export type BaseAppEnvVars = {
   NODE_ENV: NodeEnv;
   ISOLATED_ENV?: string;
 };
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface AppEnvVars extends BaseAppEnvVars {}
 
 const DEFAULT_BASE_ENV: Partial<AppEnvVars> = {};
@@ -51,7 +51,10 @@ The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 */
 
-export default singleton(name('ENV', autoService(initENV))) as typeof initENV;
+export default location(
+  singleton(name('ENV', autoService(initENV))),
+  import.meta.url,
+) as typeof initENV;
 
 export type ProcessEnvConfig = {
   BASE_ENV?: Partial<AppEnvVars>;

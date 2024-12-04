@@ -1,9 +1,9 @@
 import { join as pathJoin, extname } from 'node:path';
-import { autoService, singleton, name } from 'knifecycle';
+import { autoService, singleton, name, location } from 'knifecycle';
 import { noop } from 'common-services';
 import { printStackTrace, YError } from 'yerror';
-import type { ImporterService, LogService } from 'common-services';
-import type { BaseAppEnv, ProcessEnvConfig } from './ENV.js';
+import { type ImporterService, type LogService } from 'common-services';
+import { type BaseAppEnv, type ProcessEnvConfig } from './ENV.js';
 
 /* Architecture Note #1.4: `APP_CONFIG`
 
@@ -13,6 +13,7 @@ The `APP_CONFIG` service allows to manage a typed application
 */
 
 export type BaseAppConfig = ProcessEnvConfig;
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface AppConfig extends BaseAppConfig {}
 export type AppConfigDependencies<T extends BaseAppEnv> = {
   APP_ENV: T;
@@ -21,9 +22,9 @@ export type AppConfigDependencies<T extends BaseAppEnv> = {
   log?: LogService;
 };
 
-export default name(
-  'APP_CONFIG',
-  singleton(autoService(initAppConfig)),
+export default location(
+  name('APP_CONFIG', singleton(autoService(initAppConfig))),
+  import.meta.url,
 ) as typeof initAppConfig;
 
 /**

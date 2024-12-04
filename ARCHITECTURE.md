@@ -106,7 +106,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L102-L107)
+[See in context](./src/services/ENV.ts#L105-L110)
 
 
 
@@ -116,7 +116,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L135-L140)
+[See in context](./src/services/ENV.ts#L138-L143)
 
 
 
@@ -125,7 +125,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L143-L146)
+[See in context](./src/services/ENV.ts#L146-L149)
 
 
 
@@ -138,7 +138,7 @@ The final environment is composed from the different sources
 - the process ENV (so that one can override values by
    adding environment variables).
 
-[See in context](./src/services/ENV.ts#L149-L156)
+[See in context](./src/services/ENV.ts#L152-L159)
 
 
 
@@ -159,7 +159,7 @@ The `process` service takes care of the process status.
 It returns nothing and should be injected only for its
  side effects.
 
-[See in context](./src/services/process.ts#L28-L33)
+[See in context](./src/services/process.ts#L33-L38)
 
 
 
@@ -167,7 +167,7 @@ It returns nothing and should be injected only for its
 
 It also set the process name with the actual NODE_ENV.
 
-[See in context](./src/services/process.ts#L75-L78)
+[See in context](./src/services/process.ts#L83-L86)
 
 
 
@@ -178,7 +178,7 @@ It also handle SIGINT and SIGTERM signals to allow to
  to handle can be customized by injecting the `SIGNALS`
  optional dependencies.
 
-[See in context](./src/services/process.ts#L83-L89)
+[See in context](./src/services/process.ts#L91-L97)
 
 
 
@@ -187,7 +187,7 @@ It also handle SIGINT and SIGTERM signals to allow to
 If an error occurs it attempts to gracefully exit
 to give it a chance to finish properly.
 
-[See in context](./src/services/process.ts#L94-L98)
+[See in context](./src/services/process.ts#L102-L106)
 
 
 
@@ -197,7 +197,7 @@ If an uncaught exception occurs it also attempts to
  gracefully exit since a process should never be kept
  alive when an uncaught exception is raised.
 
-[See in context](./src/services/process.ts#L105-L110)
+[See in context](./src/services/process.ts#L113-L118)
 
 
 

@@ -1,9 +1,14 @@
 import { printStackTrace } from 'yerror';
-import { autoProvider, singleton } from 'knifecycle';
+import {
+  autoProvider,
+  singleton,
+  location,
+  type FatalErrorService,
+  type Knifecycle,
+} from 'knifecycle';
 import { noop } from 'common-services';
-import type { FatalErrorService, Knifecycle } from 'knifecycle';
-import type { LogService } from 'common-services';
-import type { AppEnvVars, BaseAppEnv } from './ENV.js';
+import { type LogService } from 'common-services';
+import { type AppEnvVars, type BaseAppEnv } from './ENV.js';
 
 const DEFAULT_SIGNALS: NodeJS.Signals[] = ['SIGTERM', 'SIGINT'];
 
@@ -32,7 +37,10 @@ It returns nothing and should be injected only for its
  side effects.
 */
 
-export default singleton(autoProvider(initProcess)) as typeof initProcess;
+export default location(
+  singleton(autoProvider(initProcess)),
+  import.meta.url,
+) as typeof initProcess;
 
 /**
  * Instantiate the process service

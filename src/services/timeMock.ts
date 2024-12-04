@@ -1,4 +1,4 @@
-import { autoService, singleton } from 'knifecycle';
+import { autoService, singleton, location } from 'knifecycle';
 import { type LogService, type TimeService, noop } from 'common-services';
 
 export type ClockMockService =
@@ -27,7 +27,7 @@ The `timeMock` service allows developers to mock the time
  service provided by the `common-services` module.
 */
 
-export default singleton(autoService(initTimeMock));
+export default location(singleton(autoService(initTimeMock)), import.meta.url);
 
 /**
  * Instantiate the time mock service
