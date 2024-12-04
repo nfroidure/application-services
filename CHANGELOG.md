@@ -1,3 +1,12 @@
+# [7.0.0](https://github.com/nfroidure/application-services/compare/v6.1.0...v7.0.0) (2024-12-04)
+
+
+### Features
+
+* **services:** add a time mock service ([fb9ffdb](https://github.com/nfroidure/application-services/commit/fb9ffdbd01efbe6f24f3e31b8dbde4fe93ab4c95))
+
+
+
 # [6.1.0](https://github.com/nfroidure/application-services/compare/v6.0.0...v6.1.0) (2024-07-15)
 
 
