@@ -35,7 +35,7 @@ describe('TimeMock service', () => {
     [
       "debug",
       "⏰ - Picked a mocked timestamp:",
-      1356034820000,
+      "2012-12-20T20:20:20.000Z",
     ],
   ],
   "timeCalls": [],
@@ -70,7 +70,7 @@ describe('TimeMock service', () => {
     [
       "debug",
       "⏰ - Picked a mocked timestamp:",
-      1356034840000,
+      "2012-12-20T20:20:40.000Z",
     ],
   ],
   "timeCalls": [

@@ -72,7 +72,11 @@ async function initTimeMock({
       CLOCK_MOCK.mockedTime +
       (CLOCK_MOCK.isFixed ? 0 : time() - CLOCK_MOCK.referenceTime);
 
-    log('debug', '⏰ - Picked a mocked timestamp:', currentTime);
+    log(
+      'debug',
+      '⏰ - Picked a mocked timestamp:',
+      new Date(currentTime).toISOString(),
+    );
 
     return currentTime;
   };
