@@ -70,6 +70,7 @@ export type {
   ProjectDirDependencies,
 } from './services/PROJECT_DIR.js';
 export type {
+  TimeMockService,
   TimeMockConfig,
   TimeMockDependencies,
   ClockMockService,
