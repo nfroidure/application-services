@@ -1,3 +1,12 @@
+## [7.0.2](https://github.com/nfroidure/application-services/compare/v7.0.1...v7.0.2) (2025-02-06)
+
+
+### Bug Fixes
+
+* **types:** export time mock service type too ([a714010](https://github.com/nfroidure/application-services/commit/a714010ffc6b0d008dfb16bf6bdb6a5092b44e94))
+
+
+
 ## [7.0.1](https://github.com/nfroidure/application-services/compare/v7.0.0...v7.0.1) (2024-12-06)
 
 
