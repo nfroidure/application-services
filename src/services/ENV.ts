@@ -1,6 +1,6 @@
 import { readFile as _readFile } from 'node:fs/promises';
 import path from 'node:path';
-import dotenv from 'dotenv';
+import { parse as parseDotEnv } from 'dotenv';
 import { autoService, name, singleton, location } from 'knifecycle';
 import { noop } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
@@ -193,7 +193,7 @@ async function _readEnvFile<T extends BaseAppEnv>(
 
   try {
     const buf = await readFile(fullFilePath);
-    const FILE_ENV = dotenv.parse(buf);
+    const FILE_ENV = parseDotEnv(buf);
 
     log('warning', `🖬 - Loaded .env file at "${fullFilePath}".`);
 

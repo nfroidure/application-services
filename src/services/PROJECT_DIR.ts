@@ -1,4 +1,4 @@
-import { packageDirectory } from 'pkg-dir';
+import { packageDirectory } from 'package-directory';
 import { name, autoService, singleton, location } from 'knifecycle';
 import { YError } from 'yerror';
 import { noop } from 'common-services';
