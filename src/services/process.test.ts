@@ -11,18 +11,19 @@ import { Knifecycle, constant } from 'knifecycle';
 import initProcessService from './process.js';
 import { NodeEnv } from './ENV.js';
 import { type LogService } from 'common-services';
+import { exit as _exit } from 'node:process';
 
 describe('Process service', () => {
   const log = jest.fn<LogService>();
   const savedProcessName = global.process.title;
   const processListenerStub = jest.spyOn(global.process, 'on');
-  let exit;
-  let exitPromise;
-  let fatalErrorDeferred;
+  let exit: jest.Mock<typeof _exit>;
+  let exitPromise: Promise<void>;
+  let rejectFatalErrorDeferred: (reason?: Error) => void;
 
   beforeEach(() => {
-    exitPromise = new Promise((resolve) => {
-      exit = jest.fn(resolve);
+    exitPromise = new Promise<void>((resolve) => {
+      exit = jest.fn<typeof _exit>(resolve as typeof _exit);
     });
     processListenerStub.mockClear();
     log.mockReset();
@@ -42,8 +43,8 @@ describe('Process service', () => {
         exit,
         $instance: { destroy: () => Promise.resolve() } as Knifecycle,
         $fatalError: {
-          errorPromise: new Promise((resolve, reject) => {
-            fatalErrorDeferred = { resolve, reject };
+          errorPromise: new Promise((_resolve, reject) => {
+            rejectFatalErrorDeferred = reject;
           }),
           registerErrorPromise: jest.fn(),
           unregisterErrorPromise: jest.fn(),
@@ -66,7 +67,7 @@ describe('Process service', () => {
     });
 
     test('should handle fatal errors', async () => {
-      fatalErrorDeferred.reject(new YError('E_AOUCH'));
+      rejectFatalErrorDeferred(new YError('E_AOUCH'));
 
       await exitPromise;
 

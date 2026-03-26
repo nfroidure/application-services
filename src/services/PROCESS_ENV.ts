@@ -16,7 +16,7 @@ A simple service to enclose the NodeJS `process.env`
  * Provides the PROCESS_ENV service
  */
 async function initProcessEnv(): Promise<AppEnvVars> {
-  return env as AppEnvVars;
+  return env as unknown as AppEnvVars;
 }
 
 export default location(

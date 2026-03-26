@@ -12,9 +12,9 @@ export type ClockMockService =
       isFixed: false;
     };
 export type TimeMockService = TimeService;
-export type TimeMockConfig = {
+export interface TimeMockConfig {
   CLOCK_MOCK?: ClockMockService;
-};
+}
 export type TimeMockDependencies = Required<TimeMockConfig> & {
   time?: TimeService;
   log?: LogService;

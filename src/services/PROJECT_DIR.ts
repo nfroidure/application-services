@@ -11,9 +11,9 @@ A service to determine the directory of the NodeJS project
 */
 
 export type ProjectDirService = string;
-export type ProjectDirDependencies = {
+export interface ProjectDirDependencies {
   log: LogService;
-};
+}
 
 /**
  * Initialize the PROJECT_DIR service

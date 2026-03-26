@@ -35,10 +35,10 @@ Note that we made an utility function to help you extracting
 */
 export type BaseAppEnv = 'local';
 
-export type BaseAppEnvVars = {
+export interface BaseAppEnvVars {
   NODE_ENV: NodeEnv;
   ISOLATED_ENV?: string;
-};
+}
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface AppEnvVars extends BaseAppEnvVars {}
 
@@ -56,9 +56,9 @@ export default location(
   import.meta.url,
 ) as typeof initENV;
 
-export type ProcessEnvConfig = {
+export interface ProcessEnvConfig {
   BASE_ENV?: Partial<AppEnvVars>;
-};
+}
 export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
   APP_ENV: T;
   PROJECT_DIR: string;
@@ -128,7 +128,7 @@ async function initENV<T extends BaseAppEnv>({
       'error',
       `❌ - Non-standard NODE_ENV value detected: "${ENV.NODE_ENV}".`,
     );
-    throw new YError('E_BAD_NODE_ENV', ENV.NODE_ENV, NODE_ENVS);
+    throw new YError('E_BAD_NODE_ENV', [ENV.NODE_ENV, NODE_ENVS]);
   }
 
   const FINAL_NODE_ENV = ENV.NODE_ENV;
@@ -171,7 +171,7 @@ async function initENV<T extends BaseAppEnv>({
       'error',
       `❌ - Illegal attempt to change the NODE_ENV value via env files: "${ENV.NODE_ENV}".`,
     );
-    throw new YError('E_BAD_ENV', ENV.NODE_ENV, FINAL_NODE_ENV);
+    throw new YError('E_BAD_ENV', [ENV.NODE_ENV, FINAL_NODE_ENV]);
   }
 
   return ENV as AppEnvVars;

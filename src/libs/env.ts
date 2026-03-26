@@ -13,5 +13,5 @@ export function extractAppEnv<T extends string = 'local'>(
   if ((availableAppEnvs as readonly string[]).includes(appEnv)) {
     return appEnv as T;
   }
-  throw new YError('E_BAD_APP_ENV', appEnv, availableAppEnvs);
+  throw new YError('E_BAD_APP_ENV', [appEnv, availableAppEnvs]);
 }

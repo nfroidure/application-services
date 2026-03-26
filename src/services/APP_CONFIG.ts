@@ -15,12 +15,12 @@ The `APP_CONFIG` service allows to manage a typed application
 export type BaseAppConfig = ProcessEnvConfig;
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface AppConfig extends BaseAppConfig {}
-export type AppConfigDependencies<T extends BaseAppEnv> = {
+export interface AppConfigDependencies<T extends BaseAppEnv> {
   APP_ENV: T;
   MAIN_FILE_URL: string;
   importer: ImporterService<{ default: AppConfig }>;
   log?: LogService;
-};
+}
 
 export default location(
   name('APP_CONFIG', singleton(autoService(initAppConfig))),
@@ -63,6 +63,6 @@ async function initAppConfig<T extends BaseAppEnv>({
   } catch (err) {
     log('warning', `☢ - Could not load configuration file "${configPath}".`);
     log('debug-stack', printStackTrace(err as Error));
-    throw YError.wrap(err as Error, 'E_NO_CONFIG', configPath);
+    throw YError.wrap(err as Error, 'E_NO_CONFIG', [configPath]);
   }
 }

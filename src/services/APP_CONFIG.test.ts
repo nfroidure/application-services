@@ -35,29 +35,29 @@ describe('initAppConfig', () => {
       logCalls: log.mock.calls.filter((args) => 'debug-stack' !== args[0]),
       importerCalls: importer.mock.calls,
     }).toMatchInlineSnapshot(`
-{
-  "APP_CONFIG": {
-    "BASE_ENV": {
-      "NODE_ENV": "test",
-    },
-  },
-  "importerCalls": [
-    [
-      "file:///home/whoami/my-whook-project/src/config/local/config.js",
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "🏭 - Initializing the APP_CONFIG service.",
-    ],
-    [
-      "warning",
-      "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
-    ],
-  ],
-}
-`);
+     {
+       "APP_CONFIG": {
+         "BASE_ENV": {
+           "NODE_ENV": "test",
+         },
+       },
+       "importerCalls": [
+         [
+           "file:///home/whoami/my-whook-project/src/config/local/config.js",
+         ],
+       ],
+       "logCalls": [
+         [
+           "debug",
+           "🏭 - Initializing the APP_CONFIG service.",
+         ],
+         [
+           "warning",
+           "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
+         ],
+       ],
+     }
+    `);
   });
 
   it('should fail with non-existing file', async () => {
@@ -76,36 +76,36 @@ describe('initAppConfig', () => {
     } catch (err) {
       expect({
         errorCode: (err as YError).code,
-        errorParams: (err as YError).params,
+        errorDebugValues: (err as YError).debugValues,
         logCalls: log.mock.calls.filter(([type]) => !type.endsWith('stack')),
         importerCalls: importer.mock.calls,
       }).toMatchInlineSnapshot(`
-{
-  "errorCode": "E_NO_CONFIG",
-  "errorParams": [
-    "file:///home/whoami/my-whook-project/src/config/local/config.js",
-  ],
-  "importerCalls": [
-    [
-      "file:///home/whoami/my-whook-project/src/config/local/config.js",
-    ],
-  ],
-  "logCalls": [
-    [
-      "debug",
-      "🏭 - Initializing the APP_CONFIG service.",
-    ],
-    [
-      "warning",
-      "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
-    ],
-    [
-      "warning",
-      "☢ - Could not load configuration file "file:///home/whoami/my-whook-project/src/config/local/config.js".",
-    ],
-  ],
-}
-`);
+       {
+         "errorCode": "E_NO_CONFIG",
+         "errorDebugValues": [
+           "file:///home/whoami/my-whook-project/src/config/local/config.js",
+         ],
+         "importerCalls": [
+           [
+             "file:///home/whoami/my-whook-project/src/config/local/config.js",
+           ],
+         ],
+         "logCalls": [
+           [
+             "debug",
+             "🏭 - Initializing the APP_CONFIG service.",
+           ],
+           [
+             "warning",
+             "⚡ - Loading configurations from "file:///home/whoami/my-whook-project/src/config/local/config.js".",
+           ],
+           [
+             "warning",
+             "☢ - Could not load configuration file "file:///home/whoami/my-whook-project/src/config/local/config.js".",
+           ],
+         ],
+       }
+      `);
     }
   });
 });

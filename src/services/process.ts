@@ -5,6 +5,7 @@ import {
   location,
   type FatalErrorService,
   type Knifecycle,
+  type ServiceProperties,
 } from 'knifecycle';
 import { noop } from 'common-services';
 import { type LogService } from 'common-services';
@@ -12,14 +13,14 @@ import { type AppEnvVars, type BaseAppEnv } from './ENV.js';
 
 const DEFAULT_SIGNALS: NodeJS.Signals[] = ['SIGTERM', 'SIGINT'];
 
-export type ProcessService = {
+export interface ProcessService {
   service: NodeJS.Process;
   dispose: () => Promise<void>;
-};
-export type ProcessServiceConfig = {
+}
+export interface ProcessServiceConfig {
   PROCESS_NAME?: string;
   SIGNALS?: NodeJS.Signals[];
-};
+}
 export type ProcessServiceDependencies<T extends BaseAppEnv> =
   ProcessServiceConfig & {
     ENV: AppEnvVars;
@@ -36,11 +37,6 @@ The `process` service takes care of the process status.
 It returns nothing and should be injected only for its
  side effects.
 */
-
-export default location(
-  singleton(autoProvider(initProcess)),
-  import.meta.url,
-) as typeof initProcess;
 
 /**
  * Instantiate the process service
@@ -165,3 +161,8 @@ async function initProcess<T extends BaseAppEnv>({
     dispose,
   };
 }
+
+export default location(
+  singleton(autoProvider(initProcess)),
+  import.meta.url,
+) as unknown as ServiceProperties & typeof initProcess;
