@@ -1,3 +1,5 @@
+# [8.0.0](https://github.com/nfroidure/application-services/compare/v7.0.4...v8.0.0) (2026-03-26)
+
 ## [7.0.4](https://github.com/nfroidure/application-services/compare/v7.0.3...v7.0.4) (2025-11-06)
 
 
