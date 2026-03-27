@@ -1,3 +1,10 @@
+## [8.0.1](https://github.com/nfroidure/application-services/compare/v8.0.0...v8.0.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **api:** fix initializer api surface ([05c189c](https://github.com/nfroidure/application-services/commit/05c189cf7031fce87a2384efc2c7810fe14fcc03))
+
 # [8.0.0](https://github.com/nfroidure/application-services/compare/v7.0.4...v8.0.0) (2026-03-26)
 
 ## [7.0.4](https://github.com/nfroidure/application-services/compare/v7.0.3...v7.0.4) (2025-11-06)
