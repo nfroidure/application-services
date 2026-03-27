@@ -95,7 +95,7 @@ A service to determine the directory of the NodeJS project
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 
-[See in context](./src/services/ENV.ts#L48-L52)
+[See in context](./src/services/ENV.ts#L54-L58)
 
 
 
@@ -106,7 +106,7 @@ Per default, we take the process environment as is
  projects statically so one can isolate the process
  env by using the `ISOLATED_ENV` environment variable.
 
-[See in context](./src/services/ENV.ts#L105-L110)
+[See in context](./src/services/ENV.ts#L106-L111)
 
 
 
@@ -116,7 +116,7 @@ You may want to set some env vars depending on the
  `NODE_ENV`. We use `dotenv` to provide your such
  ability.
 
-[See in context](./src/services/ENV.ts#L138-L143)
+[See in context](./src/services/ENV.ts#L139-L144)
 
 
 
@@ -125,7 +125,7 @@ You may want to set some env vars depending on the
 You may need to keep some secrets out of your Git
  history fo each deployment targets too.
 
-[See in context](./src/services/ENV.ts#L146-L149)
+[See in context](./src/services/ENV.ts#L147-L150)
 
 
 
@@ -138,7 +138,7 @@ The final environment is composed from the different sources
 - the process ENV (so that one can override values by
    adding environment variables).
 
-[See in context](./src/services/ENV.ts#L152-L159)
+[See in context](./src/services/ENV.ts#L153-L160)
 
 
 
@@ -148,7 +148,7 @@ The `APP_CONFIG` service allows to manage a typed application
  configuration by selectively loading the configuration file
  according to the `APP_ENV` environment variable.
 
-[See in context](./src/services/APP_CONFIG.ts#L8-L13)
+[See in context](./src/services/APP_CONFIG.ts#L14-L19)
 
 
 
@@ -222,7 +222,7 @@ const APP_ENV = extractAppEnv<AppEnv>(env.APP_ENV, APP_ENVS);
 Note that we made an utility function to help you extracting
  that value.
 
-[See in context](./src/services/ENV.ts#L15-L35)
+[See in context](./src/services/ENV.ts#L21-L41)
 
 
 

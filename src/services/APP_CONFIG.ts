@@ -1,5 +1,11 @@
 import { join as pathJoin, extname } from 'node:path';
-import { autoService, singleton, name, location } from 'knifecycle';
+import {
+  autoService,
+  singleton,
+  name,
+  location,
+  type ServiceProperties,
+} from 'knifecycle';
 import { noop } from 'common-services';
 import { printStackTrace, YError } from 'yerror';
 import { type ImporterService, type LogService } from 'common-services';
@@ -21,11 +27,6 @@ export interface AppConfigDependencies<T extends BaseAppEnv> {
   importer: ImporterService<{ default: AppConfig }>;
   log?: LogService;
 }
-
-export default location(
-  name('APP_CONFIG', singleton(autoService(initAppConfig))),
-  import.meta.url,
-) as typeof initAppConfig;
 
 /**
  * Initialize the APP_CONFIG service according to the APP_ENV
@@ -66,3 +67,8 @@ async function initAppConfig<T extends BaseAppEnv>({
     throw YError.wrap(err as Error, 'E_NO_CONFIG', [configPath]);
   }
 }
+
+export default location(
+  name('APP_CONFIG', singleton(autoService(initAppConfig))),
+  import.meta.url,
+) as unknown as ServiceProperties & typeof initAppConfig;

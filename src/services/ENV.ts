@@ -1,7 +1,13 @@
 import { readFile as _readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { parse as parseDotEnv } from 'dotenv';
-import { autoService, name, singleton, location } from 'knifecycle';
+import {
+  autoService,
+  name,
+  singleton,
+  location,
+  type ServiceProperties,
+} from 'knifecycle';
 import { noop } from 'common-services';
 import { YError, printStackTrace } from 'yerror';
 import { type LogService } from 'common-services';
@@ -50,11 +56,6 @@ const NODE_ENVS = Object.values(NodeEnv);
 The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 */
-
-export default location(
-  singleton(name('ENV', autoService(initENV))),
-  import.meta.url,
-) as typeof initENV;
 
 export interface ProcessEnvConfig {
   BASE_ENV?: Partial<AppEnvVars>;
@@ -204,3 +205,8 @@ async function _readEnvFile<T extends BaseAppEnv>(
     return {};
   }
 }
+
+export default location(
+  singleton(name('ENV', autoService(initENV))),
+  import.meta.url,
+) as unknown as ServiceProperties & typeof initENV;
