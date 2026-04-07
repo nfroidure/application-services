@@ -172,7 +172,7 @@ async function initENV<T extends BaseAppEnv>({
       'error',
       `❌ - Illegal attempt to change the NODE_ENV value via env files: "${ENV.NODE_ENV}".`,
     );
-    throw new YError('E_BAD_ENV', [ENV.NODE_ENV, FINAL_NODE_ENV]);
+    throw new YError('E_BAD_ENV', [ENV.NODE_ENV as string, FINAL_NODE_ENV]);
   }
 
   return ENV as AppEnvVars;

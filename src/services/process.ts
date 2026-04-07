@@ -1,4 +1,5 @@
 import { printStackTrace } from 'yerror';
+import process from 'node:process';
 import {
   autoProvider,
   singleton,
@@ -72,7 +73,7 @@ async function initProcess<T extends BaseAppEnv>({
   $fatalError,
 }: ProcessServiceDependencies<T>): Promise<ProcessService> {
   const signalsListeners = SIGNALS.map<
-    [NodeJS.Signals, NodeJS.SignalsListener]
+    [NodeJS.Signals, (signal: NodeJS.Signals) => void]
   >((signal) => [signal, terminate.bind(null, signal)]);
   let shuttingDown = false;
 
@@ -80,8 +81,8 @@ async function initProcess<T extends BaseAppEnv>({
 
   It also set the process name with the actual NODE_ENV.
   */
-  global.process.title = `${
-    PROCESS_NAME || global.process.title
+  process.title = `${
+    PROCESS_NAME || process.title
   } - ${APP_ENV}:${ENV.NODE_ENV}`;
 
   /* Architecture Note #1.5.2: Signals handling
@@ -92,7 +93,7 @@ async function initProcess<T extends BaseAppEnv>({
    optional dependencies.
   */
   signalsListeners.forEach(([signal, signalListener]) => {
-    global.process.on(signal, signalListener);
+    process.on(signal, signalListener);
   });
 
   /* Architecture Note #1.5.3: Handling services fatal errors
@@ -112,7 +113,7 @@ async function initProcess<T extends BaseAppEnv>({
    gracefully exit since a process should never be kept
    alive when an uncaught exception is raised.
   */
-  global.process.on('uncaughtException', catchUncaughtException);
+  process.on('uncaughtException', catchUncaughtException);
 
   function catchUncaughtException(err: Error) {
     log('error', '💀 - Uncaught Exception');
@@ -149,15 +150,15 @@ async function initProcess<T extends BaseAppEnv>({
   }
 
   async function dispose() {
-    global.process.removeListener('uncaughtException', catchUncaughtException);
+    process.removeListener('uncaughtException', catchUncaughtException);
     signalsListeners.forEach(([signal, signalListener]) => {
-      global.process.removeListener(signal, signalListener);
+      process.removeListener(signal, signalListener);
     });
   }
 
   log('debug', '📇 - Process service initialized.');
   return {
-    service: global.process,
+    service: process,
     dispose,
   };
 }

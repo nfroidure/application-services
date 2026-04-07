@@ -49,6 +49,9 @@ import initAppConfig from './services/APP_CONFIG.js';
 import initTimeMock from './services/timeMock.js';
 import { extractAppEnv } from './libs/env.js';
 
+// Import error registry for type safety
+import './types/errors.js';
+
 export type {
   ProcessService,
   ProcessServiceConfig,

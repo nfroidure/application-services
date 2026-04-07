@@ -76,13 +76,13 @@ describe('initAppConfig', () => {
     } catch (err) {
       expect({
         errorCode: (err as YError).code,
-        errorDebugValues: (err as YError).debugValues,
+        errorDebug: (err as YError).debug,
         logCalls: log.mock.calls.filter(([type]) => !type.endsWith('stack')),
         importerCalls: importer.mock.calls,
       }).toMatchInlineSnapshot(`
        {
          "errorCode": "E_NO_CONFIG",
-         "errorDebugValues": [
+         "errorDebug": [
            "file:///home/whoami/my-whook-project/src/config/local/config.js",
          ],
          "importerCalls": [
