@@ -1,5 +1,5 @@
 import { readFile as _readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { isAbsolute, join } from 'node:path';
 import { parse as parseDotEnv } from 'dotenv';
 import {
   autoService,
@@ -48,8 +48,8 @@ export interface BaseAppEnvVars {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface AppEnvVars extends BaseAppEnvVars {}
 
-const DEFAULT_BASE_ENV: Partial<AppEnvVars> = {};
-const NODE_ENVS = Object.values(NodeEnv);
+export const DEFAULT_BASE_ENV: Partial<AppEnvVars> = {};
+export const NODE_ENVS = Object.values(NodeEnv);
 
 /* Architecture Note #1.3: `ENV`
 
@@ -57,8 +57,26 @@ The `ENV` service adds a layer of configuration over just using
  node's `process.env` value.
 */
 
+export type ProcessEnvSecretFileOptions = {
+  /** Whether non existing secret files lead to failure or not */
+  silentlyFail?: 'all' | 'none' | string[];
+  /** To avoid removing the secrets file env vars */
+  leaveSecretFileEnvVar?: boolean;
+  /** Trim file content (defaults to 'end-new-line') */
+  trim?: 'none' | 'all' | 'start' | 'end' | 'end-new-line';
+} & (
+  | {
+      /** Prefix to detect secrets to load in files */
+      prefix: string;
+    }
+  | {
+      /** Suffix to detect secrets to load in files */
+      suffix: string;
+    }
+);
 export interface ProcessEnvConfig {
   BASE_ENV?: Partial<AppEnvVars>;
+  ENV_SECRETS_FILES?: ProcessEnvSecretFileOptions;
 }
 export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
   APP_ENV: T;
@@ -75,6 +93,8 @@ export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
  * The services `ENV` depends on
  * @param  {Object}   [services.BASE_ENV]
  * Base env vars that will be added to the environment
+ * @param  {Object}   [services.ENV_SECRETS_FILES]
+ * Options allowing to detect env vars to load in secret files
  * @param  {Object}   services.APP_ENV
  * The injected `APP_ENV` value
  * @param  {Object}   services.PROCESS_ENV
@@ -88,6 +108,7 @@ export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
  */
 async function initENV<T extends BaseAppEnv>({
   BASE_ENV = DEFAULT_BASE_ENV,
+  ENV_SECRETS_FILES,
   APP_ENV,
   PROCESS_ENV,
   PROJECT_DIR,
@@ -107,13 +128,18 @@ async function initENV<T extends BaseAppEnv>({
   Per default, we take the process environment as is
    but since it could lead to leaks when building
    projects statically so one can isolate the process
-   env by using the `ISOLATED_ENV` environment variable.
+   env by setting the `ISOLATED_ENV` environment variable
+   to anything different of 0 or FALSE (case insensitive).
   */
-  if (!PROCESS_ENV.ISOLATED_ENV) {
+  if (
+    typeof PROCESS_ENV.ISOLATED_ENV !== 'undefined' &&
+    PROCESS_ENV.ISOLATED_ENV !== '0' &&
+    PROCESS_ENV.ISOLATED_ENV.toUpperCase() !== 'FALSE'
+  ) {
+    log('warning', `🖥 - Using an isolated env.`);
+  } else {
     ENV = { ...ENV, ...PROCESS_ENV };
     log('debug', `🖥 - Using the process env.`);
-  } else {
-    log('warning', `🖥 - Using an isolated env.`);
   }
 
   if (!ENV.NODE_ENV) {
@@ -161,11 +187,27 @@ async function initENV<T extends BaseAppEnv>({
   ENV = (
     await Promise.all([
       BASE_ENV,
-      _readEnvFile({ PROJECT_DIR, readFile, log }, nodeEnvFile),
-      _readEnvFile({ PROJECT_DIR, readFile, log }, appEnvFile),
+      readEnvFile({ PROJECT_DIR, readFile, log }, nodeEnvFile),
+      readEnvFile({ PROJECT_DIR, readFile, log }, appEnvFile),
       ENV,
     ])
   ).reduce((ENV, A_ENV) => ({ ...ENV, ...A_ENV }), {});
+
+  if (ENV_SECRETS_FILES) {
+    for (const key of Object.keys(ENV)) {
+      if (
+        'prefix' in ENV_SECRETS_FILES
+          ? key.startsWith(ENV_SECRETS_FILES.prefix)
+          : key.endsWith(ENV_SECRETS_FILES.suffix)
+      ) {
+        ENV = await readSecretFile(
+          { ENV_SECRETS_FILES, PROJECT_DIR, readFile, log },
+          ENV,
+          key as keyof AppEnvVars,
+        );
+      }
+    }
+  }
 
   if (ENV.NODE_ENV !== FINAL_NODE_ENV) {
     log(
@@ -178,7 +220,7 @@ async function initENV<T extends BaseAppEnv>({
   return ENV as AppEnvVars;
 }
 
-async function _readEnvFile<T extends BaseAppEnv>(
+export async function readEnvFile<T extends BaseAppEnv>(
   {
     PROJECT_DIR,
     readFile,
@@ -188,7 +230,7 @@ async function _readEnvFile<T extends BaseAppEnv>(
   >,
   filePath: string,
 ): Promise<Partial<AppEnvVars>> {
-  const fullFilePath = path.join(PROJECT_DIR, filePath);
+  const fullFilePath = join(PROJECT_DIR, filePath);
 
   log('debug', `💾 - Trying to load .env file at "${fullFilePath}".`);
 
@@ -204,6 +246,84 @@ async function _readEnvFile<T extends BaseAppEnv>(
     log('debug-stack', printStackTrace(err as Error));
     return {};
   }
+}
+
+/**
+ * Extracts a secret from a file. Useful if you prefer
+ *  extracting your secrets yourself considering the
+ *  ENV service as unsafe.
+ */
+export async function readSecretFile<T extends BaseAppEnv>(
+  {
+    ENV_SECRETS_FILES,
+    PROJECT_DIR,
+    readFile,
+    log,
+  }: Required<
+    Pick<
+      ProcessEnvDependencies<T>,
+      'ENV_SECRETS_FILES' | 'PROJECT_DIR' | 'readFile' | 'log'
+    >
+  >,
+  ENV: Partial<AppEnvVars>,
+  name: keyof AppEnvVars,
+): Promise<Partial<AppEnvVars>> {
+  const filePath = ENV[name] ?? '';
+  const fullFilePath = filePath
+    ? isAbsolute(filePath)
+      ? filePath
+      : join(PROJECT_DIR, filePath)
+    : '';
+  const newName = (
+    'prefix' in ENV_SECRETS_FILES
+      ? name.slice(ENV_SECRETS_FILES.prefix.length)
+      : name.slice(0, name.length - ENV_SECRETS_FILES.suffix.length)
+  ) as keyof AppEnvVars;
+
+  log(
+    'debug',
+    `💾 - Trying to load "${name}" secret file at "${fullFilePath}" (resolved from "${filePath}").`,
+  );
+
+  try {
+    const buf = await readFile(fullFilePath);
+    const secret = buf.toString();
+
+    log('warning', `🖬 - Loaded ${newName} secret at "${fullFilePath}".`);
+
+    (ENV as Record<string, string>)[newName] =
+      !ENV_SECRETS_FILES.trim || ENV_SECRETS_FILES.trim === 'end-new-line'
+        ? secret.replace(/\r?\n$/, '')
+        : ENV_SECRETS_FILES.trim === 'end'
+          ? secret.trimEnd()
+          : ENV_SECRETS_FILES.trim === 'all'
+            ? secret.trim()
+            : ENV_SECRETS_FILES.trim === 'start'
+              ? secret.trimStart()
+              : secret;
+  } catch (err) {
+    log('debug', `🚫 - No file found at "${fullFilePath}".`);
+    log('debug-stack', printStackTrace(err as Error));
+    if (
+      !ENV_SECRETS_FILES.silentlyFail ||
+      ENV_SECRETS_FILES.silentlyFail === 'none' ||
+      (ENV_SECRETS_FILES.silentlyFail !== 'all' &&
+        !ENV_SECRETS_FILES.silentlyFail.includes(name))
+    ) {
+      throw YError.wrap(err as Error, 'E_SECRET_FILE_NOT_FOUND', [
+        name,
+        filePath,
+        fullFilePath,
+      ]);
+    }
+  }
+
+  if (!ENV_SECRETS_FILES.leaveSecretFileEnvVar) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete (ENV as Record<string, unknown>)[name as string];
+  }
+
+  return ENV;
 }
 
 export default location(

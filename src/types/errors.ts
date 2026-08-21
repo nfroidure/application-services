@@ -33,5 +33,14 @@ declare module 'yerror' {
      * Thrown when the project directory cannot be found.
      */
     E_NO_PROJECT_DIR: [];
+
+    /**
+     * Thrown when a secret file is not found.
+     */
+    E_SECRET_FILE_NOT_FOUND: [
+      envVarName: string,
+      givenFilePath: string,
+      resolvedFilePath: string,
+    ];
   }
 }

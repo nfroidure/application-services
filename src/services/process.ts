@@ -12,7 +12,14 @@ import { noop } from 'common-services';
 import { type LogService } from 'common-services';
 import { type AppEnvVars, type BaseAppEnv } from './ENV.js';
 
-const DEFAULT_SIGNALS: NodeJS.Signals[] = ['SIGTERM', 'SIGINT'];
+/* Architecture Note #1.5: Process
+The `process` service takes care of the process status.
+
+It returns nothing and should be injected only for its
+ side effects.
+*/
+
+export const DEFAULT_SIGNALS: NodeJS.Signals[] = ['SIGTERM', 'SIGINT'];
 
 export interface ProcessService {
   service: NodeJS.Process;
@@ -31,13 +38,6 @@ export type ProcessServiceDependencies<T extends BaseAppEnv> =
     $fatalError: FatalErrorService;
     log?: LogService;
   };
-
-/* Architecture Note #1.5: Process
-The `process` service takes care of the process status.
-
-It returns nothing and should be injected only for its
- side effects.
-*/
 
 /**
  * Instantiate the process service

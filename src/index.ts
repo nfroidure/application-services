@@ -41,51 +41,26 @@ declare module 'application-services' {
 ```
 */
 
-import initProcess from './services/process.js';
-import initProcessEnv from './services/PROCESS_ENV.js';
-import initProjectDir from './services/PROJECT_DIR.js';
-import initEnv, { NodeEnv } from './services/ENV.js';
-import initAppConfig from './services/APP_CONFIG.js';
-import initTimeMock from './services/timeMock.js';
-import { extractAppEnv } from './libs/env.js';
+export { default as initAppConfig } from './services/APP_CONFIG.js';
+export {
+  default as initEnv,
+  NodeEnv,
+  DEFAULT_BASE_ENV,
+  NODE_ENVS,
+  readEnvFile,
+  readSecretFile,
+} from './services/ENV.js';
+export { default as initProcessEnv } from './services/PROCESS_ENV.js';
+export { default as initProcess, DEFAULT_SIGNALS } from './services/process.js';
+export { default as initProjectDir } from './services/PROJECT_DIR.js';
+export { default as initTimeMock } from './services/timeMock.js';
+export { extractAppEnv } from './libs/env.js';
 
 // Import error registry for type safety
 import './types/errors.js';
 
-export type {
-  ProcessService,
-  ProcessServiceConfig,
-  ProcessServiceDependencies,
-} from './services/process.js';
-export type {
-  BaseAppEnvVars,
-  AppEnvVars,
-  ProcessEnvConfig,
-  ProcessEnvDependencies,
-} from './services/ENV.js';
-export type {
-  BaseAppConfig,
-  AppConfig,
-  AppConfigDependencies,
-} from './services/APP_CONFIG.js';
-export type {
-  ProjectDirService,
-  ProjectDirDependencies,
-} from './services/PROJECT_DIR.js';
-export type {
-  TimeMockService,
-  TimeMockConfig,
-  TimeMockDependencies,
-  ClockMockService,
-} from './services/timeMock.js';
-
-export {
-  NodeEnv,
-  initProcess,
-  initProcessEnv,
-  initProjectDir,
-  initEnv,
-  initAppConfig,
-  initTimeMock,
-  extractAppEnv,
-};
+export type * from './services/process.js';
+export type * from './services/ENV.js';
+export type * from './services/APP_CONFIG.js';
+export type * from './services/PROJECT_DIR.js';
+export type * from './services/timeMock.js';
