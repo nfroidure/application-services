@@ -1,6 +1,13 @@
 import { autoService, singleton, location } from 'knifecycle';
 import { type LogService, type TimeService, noop } from 'common-services';
 
+/* Architecture Note #1.7: Time mock
+
+The `timeMock` service allows developers to mock the time
+ of the application by injecting it instead of the `time`
+ service provided by the `common-services` module.
+*/
+
 export type ClockMockService =
   | {
       mockedTime: number;
@@ -19,15 +26,6 @@ export type TimeMockDependencies = Required<TimeMockConfig> & {
   time?: TimeService;
   log?: LogService;
 };
-
-/* Architecture Note #1.7: Time mock
-
-The `timeMock` service allows developers to mock the time
- of the application by injecting it instead of the `time`
- service provided by the `common-services` module.
-*/
-
-export default location(singleton(autoService(initTimeMock)), import.meta.url);
 
 /**
  * Instantiate the time mock service
@@ -83,3 +81,5 @@ async function initTimeMock({
 
   return timeMock;
 }
+
+export default location(singleton(autoService(initTimeMock)), import.meta.url);

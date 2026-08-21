@@ -27,6 +27,8 @@ Out of the box, standard compliant, application environment:
 - managing application environment in a clean and separate `APP_ENV` environment
   variable,
 - leverage `dotenv` to read environment variables,
+- use secret files to fill environment variables (useful for
+  [Docker Compose secrets](https://docs.docker.com/compose/how-tos/use-secrets/)),
 - manage separate and type checked applications configurations for each
   deployment environments and allows loading it automatically (in the
   `./configs/${APP_ENV}/index` file).
@@ -62,6 +64,11 @@ Provides the PROCESS_ENV service</a> : <code>Object</code></dt>
 <dt><a href="#initENV">initENV(services)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
 <dd><p>Initialize the ENV service using process env plus dotenv files
  loaded in <code>.env.node.${ENV.NODE_ENV}</code> and <code>.env.app.${APP_ENV}</code>.</p>
+</dd>
+<dt><a href="#readSecretFile">readSecretFile()</a></dt>
+<dd><p>Extracts a secret from a file. Useful if you prefer
+ extracting your secrets yourself considering the
+ ENV service as unsafe.</p>
 </dd>
 <dt><a href="#initProcess">initProcess(services)</a> ⇒ <code>Promise.&lt;Object&gt;</code></dt>
 <dd><p>Instantiate the process service</p>
@@ -122,11 +129,20 @@ Initialize the ENV service using process env plus dotenv files
 | --- | --- | --- | --- |
 | services | <code>Object</code> |  | The services `ENV` depends on |
 | [services.BASE_ENV] | <code>Object</code> |  | Base env vars that will be added to the environment |
+| [services.ENV_SECRETS_FILES] | <code>Object</code> |  | Options allowing to detect env vars to load in secret files |
 | services.APP_ENV | <code>Object</code> |  | The injected `APP_ENV` value |
 | services.PROCESS_ENV | <code>Object</code> |  | The injected `process.env` value |
 | services.PROJECT_DIR | <code>Object</code> |  | The NodeJS project directory |
 | [services.log] | <code>Object</code> | <code>noop</code> | An optional logging service |
 
+<a name="readSecretFile"></a>
+
+## readSecretFile()
+Extracts a secret from a file. Useful if you prefer
+ extracting your secrets yourself considering the
+ ENV service as unsafe.
+
+**Kind**: global function  
 <a name="initProcess"></a>
 
 ## initProcess(services) ⇒ <code>Promise.&lt;Object&gt;</code>
