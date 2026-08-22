@@ -1,3 +1,9 @@
+## [9.1.0](https://github.com/nfroidure/application-services/compare/v9.0.1...v9.1.0) (2026-08-22)
+
+### Features
+
+* **env:** allow to load secrets from files ([ec59300](https://github.com/nfroidure/application-services/commit/ec59300a757da166debab9a0c19d8ea2b316a7c6))
+
 ## [9.0.1](https://github.com/nfroidure/application-services/compare/v9.0.0...v9.0.1) (2026-04-17)
 
 # [9.0.0](https://github.com/nfroidure/application-services/compare/v8.0.1...v9.0.0) (2026-04-07)
