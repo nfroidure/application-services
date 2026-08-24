@@ -1,3 +1,9 @@
+## [9.2.0](https://github.com/nfroidure/application-services/compare/v9.1.0...v9.2.0) (2026-08-24)
+
+### Bug Fixes
+
+* **env:** allow to disable secret files ([cc3d484](https://github.com/nfroidure/application-services/commit/cc3d4846350a0c60305d4629555aaaef8558f0d8))
+
 ## [9.1.0](https://github.com/nfroidure/application-services/compare/v9.0.1...v9.1.0) (2026-08-22)
 
 ### Features
