@@ -33,6 +33,7 @@ ISOLATED_ENV=
     );
 
     const ENV = await initENV({
+      ENV_SECRETS_FILES: {},
       APP_ENV: 'local',
       BASE_ENV: { ISOLATED_ENV: '1', NODE_ENV: NodeEnv.Production },
       PROCESS_ENV: { ISOLATED_ENV: '0' },

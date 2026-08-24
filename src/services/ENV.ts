@@ -50,6 +50,7 @@ export interface AppEnvVars extends BaseAppEnvVars {}
 
 export const DEFAULT_BASE_ENV: Partial<AppEnvVars> = {};
 export const NODE_ENVS = Object.values(NodeEnv);
+export const DEFAULT_ENV_SECRETS_FILES: ProcessEnvSecretFileOptions = {};
 
 /* Architecture Note #1.3: `ENV`
 
@@ -73,6 +74,7 @@ export type ProcessEnvSecretFileOptions = {
       /** Suffix to detect secrets to load in files */
       suffix: string;
     }
+  | object
 );
 export interface ProcessEnvConfig {
   BASE_ENV?: Partial<AppEnvVars>;
@@ -108,7 +110,7 @@ export type ProcessEnvDependencies<T extends BaseAppEnv> = ProcessEnvConfig & {
  */
 async function initENV<T extends BaseAppEnv>({
   BASE_ENV = DEFAULT_BASE_ENV,
-  ENV_SECRETS_FILES,
+  ENV_SECRETS_FILES = DEFAULT_ENV_SECRETS_FILES,
   APP_ENV,
   PROCESS_ENV,
   PROJECT_DIR,
@@ -198,7 +200,9 @@ async function initENV<T extends BaseAppEnv>({
       if (
         'prefix' in ENV_SECRETS_FILES
           ? key.startsWith(ENV_SECRETS_FILES.prefix)
-          : key.endsWith(ENV_SECRETS_FILES.suffix)
+          : 'suffix' in ENV_SECRETS_FILES
+            ? key.endsWith(ENV_SECRETS_FILES.suffix)
+            : false
       ) {
         ENV = await readSecretFile(
           { ENV_SECRETS_FILES, PROJECT_DIR, readFile, log },
@@ -277,7 +281,9 @@ export async function readSecretFile<T extends BaseAppEnv>(
   const newName = (
     'prefix' in ENV_SECRETS_FILES
       ? name.slice(ENV_SECRETS_FILES.prefix.length)
-      : name.slice(0, name.length - ENV_SECRETS_FILES.suffix.length)
+      : 'suffix' in ENV_SECRETS_FILES
+        ? name.slice(0, name.length - ENV_SECRETS_FILES.suffix.length)
+        : name
   ) as keyof AppEnvVars;
 
   log(
